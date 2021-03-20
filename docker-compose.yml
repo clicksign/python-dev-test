@@ -1,0 +1,58 @@
+version: '3.7'
+services:
+  db:
+    image: postgres:13.2
+    container_name: postgres-container
+    environment: 
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=edson
+      - POSTGRES_PASSWORD=clicksign
+    volumes: 
+      - "./data/postgres:/var/lib/postgresql/data"
+    restart: always
+    ports:
+      - 15432:5432
+    networks:
+      - clicksign_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-container
+    environment: 
+      - PGADMIN_DEFAULT_EMAIL=edson.costa@hotmail.com
+      - PGADMIN_DEFAULT_PASSWORD=clicksign
+    ports:
+      - 8889:80
+    networks:
+      - clicksign_network
+
+
+  webserver:
+      build: "./airflow"
+      container_name: airflow-container
+      restart: always
+      volumes:
+        - ./dags:/usr/local/airflow/dags
+      ports:
+        - 8080:8080
+      depends_on: 
+        - db
+      environment: 
+            - LOAD_EX=n
+            - EXECUTOR=Local
+      healthcheck:
+        test: [ "CMD", "nc", "-z", "airflow", "8080" ]
+        timeout: 45s
+        interval: 10s
+        retries: 10
+      networks:
+        - clicksign_network
+networks:
+  clicksign_network:
+    driver: bridge
+
+
+
+
+
+
