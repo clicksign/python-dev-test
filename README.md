@@ -41,6 +41,6 @@ Processo ETL
 
 - O único requisito para rodar o código é possuir o Docker no computador
 
-- As intruções estão no arquivo instrucoes.pdf
+- As instruções estão no arquivo instrucoes.pdf
 
 
