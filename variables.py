@@ -2,9 +2,9 @@ VARIABLES = {
     "data_file_path": "data/Adult.data",
     "number_of_columns": 15,
     "expected_header": ["age", "workclass", "fnlwgt", "education",
-                        "education-num", "marital-status", "occupation",
-                        "relationship", "race", "sex", "capital-gain",
-                        "capital-loss", "hours-per-week", "native-country",
+                        "education num", "marital status", "occupation",
+                        "relationship", "race", "sex", "capital gain",
+                        "capital loss", "hours per week", "native country",
                         "class"],
     "expected_values_and_types": {
         0: int,
@@ -42,4 +42,5 @@ VARIABLES = {
              "Trinadad&Tobago", "Peru", "Hong", "Holand-Netherlands"],
         14: [">50K", "<=50K"],
     },
+    "known_wrong_elements": ["?"],
 }

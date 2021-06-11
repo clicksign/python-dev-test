@@ -21,6 +21,18 @@ class FileTests(unittest.TestCase):
         entry_value_expected_header = VARIABLES["expected_header"]
         self.assertEqual(len(entry_value_expected_header), entry_value_number_of_columns)
 
+    def test_variables_known_wrong_elements(self):
+        pass
+
+    def test_special_chars(self):
+        pass
+
+    def test_non_expected_values(self):
+        pass
+
+    def test_non_expected_types(self):
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()

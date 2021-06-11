@@ -1,3 +1,4 @@
+import numpy
 import pandas
 from variables import VARIABLES
 
@@ -9,18 +10,26 @@ def number_of_columns_is(expected_number_of_columns: int) -> bool:
     return number_of_columns == expected_number_of_columns
 
 
-def header_is(expected_header_items: list) -> bool:
-    pass
-
-
 def clean_file():
-    pass
+    data_file_path = VARIABLES["data_file_path"]
+    adult_file_dataframe = pandas.read_csv(data_file_path,
+                                           skipinitialspace=True,
+                                           sep=',',
+                                           header=None,
+                                           names=VARIABLES["expected_header"])
+    adult_file_dataframe = adult_file_dataframe.astype(str)
+    wrong_elements = VARIABLES["known_wrong_elements"]
+    for wrong_element in wrong_elements:
+        wrong_columns = adult_file_dataframe.isin([wrong_element]).sum(axis=0).to_dict()
+        for wrong_column in wrong_columns:
+            if wrong_columns[wrong_column]:
+                adult_file_dataframe[wrong_column] = adult_file_dataframe[wrong_column].replace(wrong_element, numpy.nan)
+    adult_file_dataframe.dropna(how='any', inplace=True)
+    adult_file_dataframe.to_csv("data/output.csv")
 
 
 def main():
-    data_file_path = VARIABLES["data_file_path"]
-    adult_file_dataframe = pandas.read_csv(data_file_path, sep=',', header=None, )
-    adult_file_dataframe.info()
+    clean_file()
 
 
 if __name__ == '__main__':
