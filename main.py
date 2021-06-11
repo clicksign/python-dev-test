@@ -1,17 +1,17 @@
 import pandas
-from tests.variables import VARIABLES
+from variables import VARIABLES
 
-data_file_path = VARIABLES["data_file_path"][3:]
 
-adult_file_dataframe = pandas.read_csv(data_file_path, sep=',', header=None, )
-
-adult_file_dataframe.info()
+def number_of_columns_is(expected_number_of_columns: int) -> bool:
+    data_file_path = VARIABLES["data_file_path"]
+    adult_file_dataframe = pandas.read_csv(data_file_path, sep=',', header=None, )
+    number_of_columns = len(adult_file_dataframe.columns)
+    return number_of_columns == expected_number_of_columns
 
 
 def main():
-    pass
+    print(number_of_columns_is(15))
 
 
 if __name__ == '__main__':
     main()
-    
