@@ -16,6 +16,11 @@ class FileTests(unittest.TestCase):
         expected_value = True
         self.assertEqual(number_of_columns_is(entry_value), expected_value)
 
+    def test_variables_columns_related(self):
+        entry_value_number_of_columns = VARIABLES["number_of_columns"]
+        entry_value_expected_header = VARIABLES["expected_header"]
+        self.assertEqual(len(entry_value_expected_header), entry_value_number_of_columns)
+
 
 if __name__ == '__main__':
     unittest.main()
