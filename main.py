@@ -36,22 +36,24 @@ def number_of_columns_is(expected_number_of_columns: int) -> bool:
     return data_number_of_columns == expected_number_of_columns and test_number_of_columns == expected_number_of_columns
 
 
-def concatenate_file() -> pandas.DataFrame:
+def concatenate_files() -> pandas.DataFrame:
     data_file_path = VARIABLES["data_file_path"]
     test_file_path = VARIABLES["test_file_path"]
     data_file_dataframe = pandas.read_csv(data_file_path,
                                           skipinitialspace=True,
                                           sep=',',
                                           header=None,
-                                          names=VARIABLES["expected_header"], )
+                                          names=VARIABLES["expected_header"],
+                                          skiprows=VARIABLES["data_file_skip_row"], )
+    data_file_dataframe_size = data_file_dataframe.shape[0]
     test_file_dataframe = pandas.read_csv(test_file_path,
                                           skipinitialspace=True,
                                           sep=',',
                                           header=None,
-                                          names=VARIABLES["expected_header"], )
-    print(test_file_dataframe)
-
-    return data_file_dataframe
+                                          names=VARIABLES["expected_header"],
+                                          skiprows=VARIABLES["test_file_skip_row"], )
+    test_file_dataframe.index += data_file_dataframe_size
+    return pandas.concat([data_file_dataframe, test_file_dataframe])
 
 
 def initial_clean_process(dataframe: pandas.DataFrame):
@@ -59,17 +61,20 @@ def initial_clean_process(dataframe: pandas.DataFrame):
     wrong_elements = VARIABLES["known_wrong_elements"]
     for wrong_element in wrong_elements:
         wrong_columns = dataframe.isin([wrong_element]).sum().to_dict()
+        print(wrong_columns)
         for wrong_column in wrong_columns:
             if wrong_columns[wrong_column]:
                 dataframe[wrong_column] = dataframe[wrong_column].replace(wrong_element, numpy.nan)
     dataframe.dropna(how='any', inplace=True)
     if VARIABLES["drop_duplicated"]:
         dataframe.drop_duplicates(inplace=True)
-    dataframe.to_csv("data/output.csv")
+    dataframe.to_csv("data/output.csv", index=False)
+
+
 
 
 def main():
-    dataframe = concatenate_file()
+    dataframe = concatenate_files()
     initial_clean_process(dataframe)
 
 

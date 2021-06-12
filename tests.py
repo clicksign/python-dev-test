@@ -15,7 +15,6 @@ class FileTests(unittest.TestCase):
         for element in VARIABLES:
             self.assertEqual(element in entry_value, expected_value)
 
-
     def test_data_file_existence(self):
         entry_value = VARIABLES["data_file_path"]
         expected_value = True
@@ -54,6 +53,9 @@ class FileTests(unittest.TestCase):
     def test_variables_drop_duplicated(self):
         entry_value = VARIABLES["drop_duplicated"]
         self.assertEqual(type(entry_value), bool)
+
+
+class StandaloneTests:
 
     def test_special_chars(self):
         pass
