@@ -1,7 +1,7 @@
 import os
 import unittest
-import pandas
 from services.variables import VARIABLES
+from services.standalone_tests import StandaloneTests
 
 
 class FileTests(unittest.TestCase):
@@ -11,7 +11,7 @@ class FileTests(unittest.TestCase):
                        "data_file_skip_row", "test_file_skip_row",
                        "number_of_columns", "expected_header",
                        "expected_values_and_types", "known_wrong_elements",
-                       "drop_duplicated"]
+                       "drop_duplicated", "unwelcome_chars_and_words"]
         expected_value = True
         for element in VARIABLES:
             self.assertEqual(element in entry_value, expected_value)
@@ -42,86 +42,29 @@ class FileTests(unittest.TestCase):
     def test_variables_columns_related(self):
         entry_value_number_of_columns = VARIABLES["number_of_columns"]
         entry_value_expected_header = VARIABLES["expected_header"]
+        entry_value_expected_values_and_types = VARIABLES["expected_values_and_types"]
         self.assertEqual(type(entry_value_number_of_columns), int)
-        self.assertEqual(len(entry_value_expected_header), entry_value_number_of_columns)
-
-    def test_variables_known_wrong_elements(self):
-        entry_value = VARIABLES["known_wrong_elements"]
-        self.assertEqual(type(entry_value), list)
-        for element in entry_value:
+        self.assertEqual(type(entry_value_expected_header), list)
+        self.assertEqual(type(entry_value_expected_values_and_types), dict)
+        for element in entry_value_expected_header:
             self.assertEqual(type(element), str)
+        for element in entry_value_expected_values_and_types:
+            self.assertEqual(type(element), int)
+            self.assertTrue(isinstance(entry_value_expected_values_and_types[element],
+                                       (list, type)))
+        self.assertEqual(len(entry_value_expected_values_and_types), entry_value_number_of_columns)
+        self.assertEqual(len(entry_value_expected_header), entry_value_number_of_columns)
 
     def test_variables_drop_duplicated(self):
         entry_value = VARIABLES["drop_duplicated"]
         self.assertEqual(type(entry_value), bool)
 
-
-class StandaloneTests:
-
-    @staticmethod
-    def _is_able_to_parse() -> bool:
-        """
-        Verifies if data_file_path and test_file_path are able to parse through
-        pandas.read_csv
-        @rtype: bool
-        @return: a boolean representing parse viability
-        """
-        data_file_path = VARIABLES["data_file_path"]
-        test_file_path = VARIABLES["test_file_path"]
-        try:
-            pandas.read_csv(data_file_path,
-                            sep=',',
-                            header=None,
-                            skiprows=VARIABLES["data_file_skip_row"], )
-            pandas.read_csv(test_file_path,
-                            sep=',',
-                            header=None,
-                            skiprows=VARIABLES["test_file_skip_row"], )
-            return True
-        except pandas.errors.ParserError:
-            return False
-
-    @staticmethod
-    def _number_of_columns_is(expected_number_of_columns: int) -> bool:
-        """
-        Verifies if data_file_path and test_file_path has the expected number
-        of columns
-        @param expected_number_of_columns: an integer representing expected number
-        of columns
-        @type expected_number_of_columns: int
-        @rtype: bool
-        @return: a boolean representing the data_file_path and test_file_path
-        expected number of columns conformity
-        """
-        data_file_path = VARIABLES["data_file_path"]
-        test_file_path = VARIABLES["test_file_path"]
-        data_file_dataframe = pandas.read_csv(data_file_path,
-                                              sep=',',
-                                              header=None,
-                                              skiprows=VARIABLES["data_file_skip_row"], )
-        test_file_dataframe = pandas.read_csv(test_file_path,
-                                              sep=',',
-                                              header=None,
-                                              skiprows=VARIABLES["test_file_skip_row"], )
-        data_number_of_columns = len(data_file_dataframe.columns)
-        test_number_of_columns = len(test_file_dataframe.columns)
-        return data_number_of_columns == expected_number_of_columns and test_number_of_columns == expected_number_of_columns
-
-    @staticmethod
-    def test_output_file_existence(output_file_path):
-        pass
-
-    @staticmethod
-    def test_special_chars():
-        pass
-
-    @staticmethod
-    def test_non_expected_values():
-        pass
-
-    @staticmethod
-    def test_non_expected_types():
-        pass
+    def test_variables_unwelcome_chars_and_words(self):
+        entry_value = VARIABLES["unwelcome_chars_and_words"]
+        self.assertEqual(type(entry_value), dict)
+        for element in entry_value:
+            self.assertEqual(type(element), str)
+            self.assertEqual(type(entry_value[element]), str)
 
 
 if __name__ == '__main__':

@@ -41,6 +41,7 @@ def _initial_clean_process(dataframe: pandas.DataFrame):
     """
     dataframe = dataframe.astype(str)
     wrong_elements = VARIABLES["known_wrong_elements"]
+    output_file_path = VARIABLES["output_file_path"]
     for wrong_element in wrong_elements:
         wrong_columns = dataframe.isin([wrong_element]).sum().to_dict()
         for wrong_column in wrong_columns:
@@ -49,7 +50,7 @@ def _initial_clean_process(dataframe: pandas.DataFrame):
     dataframe.dropna(how='any', inplace=True)
     if VARIABLES["drop_duplicated"]:
         dataframe.drop_duplicates(inplace=True)
-    dataframe.to_csv("data/output.csv", index=False)
+    dataframe.to_csv(output_file_path, index=False)
 
 
 def initial_clean():

@@ -44,8 +44,17 @@ VARIABLES = {
              "Haiti", "Columbia", "Hungary", "Guatemala", "Nicaragua",
              "Scotland", "Thailand", "Yugoslavia", "El-Salvador",
              "Trinadad&Tobago", "Peru", "Hong", "Holand-Netherlands"],
-        14: [">50K", "<=50K"],
+        14: [">50K.", "<=50K.", ">50K", "<=50K"],
     },
     "known_wrong_elements": ["?"],
     "drop_duplicated": False,
+    "unwelcome_chars_and_words": {
+        "-": " ",
+        "&": " ",
+        "(": " ",
+        ")": " ",
+        ".": " ",
+        ">50K": "Bigger",
+        "<=50K": "Smaller",
+    },
 }

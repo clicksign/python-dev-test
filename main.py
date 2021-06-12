@@ -1,6 +1,6 @@
 import sys
 import tests
-import services.initial_clean as initial_clean
+import services.validation as validation
 import unittest
 
 
@@ -11,7 +11,7 @@ def main():
             suite = unittest.TestLoader().loadTestsFromModule(tests)
             unittest.TextTestRunner(verbosity=2).run(suite)
         elif action == "-r" or action == "--run":
-            initial_clean.initial_clean()
+            validation.main()
     except IndexError:
         print("SyntaxError: This is NOT a valid syntax.")
         print("Please use the following:")
