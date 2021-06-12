@@ -5,12 +5,28 @@ from variables import VARIABLES
 
 def number_of_columns_is(expected_number_of_columns: int) -> bool:
     data_file_path = VARIABLES["data_file_path"]
-    adult_file_dataframe = pandas.read_csv(data_file_path, sep=',', header=None, )
-    number_of_columns = len(adult_file_dataframe.columns)
-    return number_of_columns == expected_number_of_columns
+    test_file_path = VARIABLES["test_file_path"]
+    try:
+        try:
+            data_file_dataframe = pandas.read_csv(data_file_path, sep=',', header=None,)
+        except pandas.errors.ParserError:
+            data_file_dataframe = pandas.read_csv(data_file_path, sep=',', header=None, skiprows=1,)
+        try:
+            test_file_dataframe = pandas.read_csv(test_file_path, sep=',', header=None,)
+        except pandas.errors.ParserError:
+            test_file_dataframe = pandas.read_csv(test_file_path, sep=',', header=None, skiprows=1,)
+    except not pandas.errors.ParserError:
+        return False
+    data_number_of_columns = len(data_file_dataframe.columns)
+    test_number_of_columns = len(test_file_dataframe.columns)
+    return data_number_of_columns == expected_number_of_columns and test_number_of_columns == expected_number_of_columns
 
 
-def clean_file():
+def concatenate_data():
+    pass
+
+
+def initial_clean_process():
     data_file_path = VARIABLES["data_file_path"]
     adult_file_dataframe = pandas.read_csv(data_file_path,
                                            skipinitialspace=True,
@@ -29,7 +45,7 @@ def clean_file():
 
 
 def main():
-    clean_file()
+    initial_clean_process()
 
 
 if __name__ == '__main__':

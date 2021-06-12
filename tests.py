@@ -6,8 +6,13 @@ from main import number_of_columns_is
 
 class FileTests(unittest.TestCase):
 
-    def test_file_existence(self):
+    def test_data_file_existence(self):
         entry_value = VARIABLES["data_file_path"]
+        expected_value = True
+        self.assertEqual(os.path.exists(entry_value), expected_value)
+
+    def test_file_existence(self):
+        entry_value = VARIABLES["test_file_path"]
         expected_value = True
         self.assertEqual(os.path.exists(entry_value), expected_value)
 
