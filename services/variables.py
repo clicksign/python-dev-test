@@ -1,6 +1,7 @@
 VARIABLES = {
     "data_file_path": "data/Adult.data",
     "test_file_path": "data/Adult.test",
+    "output_file_path": "data/output.csv",
     "data_file_skip_row": 0,
     "test_file_skip_row": 1,
     "number_of_columns": 15,
