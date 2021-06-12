@@ -44,4 +44,5 @@ VARIABLES = {
         14: [">50K", "<=50K"],
     },
     "known_wrong_elements": ["?"],
+    "drop_duplicated": False,
 }

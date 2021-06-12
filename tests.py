@@ -24,6 +24,9 @@ class FileTests(unittest.TestCase):
         self.assertEqual(type(entry_value), int)
         self.assertEqual(number_of_columns_is(entry_value), expected_value)
 
+    def test_variables_integrity(self):
+        pass # Verify if all variables needed exists
+
     def test_variables_columns_related(self):
         entry_value_number_of_columns = VARIABLES["number_of_columns"]
         entry_value_expected_header = VARIABLES["expected_header"]
@@ -35,6 +38,10 @@ class FileTests(unittest.TestCase):
         self.assertEqual(type(entry_value), list)
         for element in entry_value:
             self.assertEqual(type(element), str)
+
+    def test_variables_drop_duplicated(self):
+        entry_value = VARIABLES["drop_duplicated"]
+        self.assertEqual(type(entry_value), bool)
 
     def test_special_chars(self):
         pass
