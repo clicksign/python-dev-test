@@ -1,10 +1,9 @@
 import sqlite3
-
 import pandas
 from sqlalchemy import create_engine
 
 
-def create_sqlite_table_from(dataframe: pandas.DataFrame, table: str):
+def sqlite_create_table_on(dataframe: pandas.DataFrame, table: str):
     """
     Creates SQLite {table} in SQLite_ClickSign.db based on {dataframe}
     @type dataframe: pandas.Dataframe
@@ -16,32 +15,26 @@ def create_sqlite_table_from(dataframe: pandas.DataFrame, table: str):
     dataframe.to_sql(table, engine, if_exists='replace', index=False)
 
 
-def get_dataframe_from(sqlite_connection: sqlite3.Connection, table: str) -> pandas.DataFrame:
-    f"""
-    Gets SQLite {table} in {sqlite_connection}
-    @type sqlite_connection: sqlite3.Connection
+def sqlite_get_dataframe_from(connection: sqlite3.Connection, table: str) -> pandas.DataFrame:
+    """
+    Gets SQLite {table} in {connection}
+    @type connection: sqlite3.Connection
     @type table: str
     @rtype: pandas.Database
-    @param sqlite_connection: a connection representing the database connection
+    @param connection: a connection representing the database connection
     @param table: a string representing the table name
     @return: a dataframe representing the table content
     """
-    dataframe = pandas.read_sql_query(f"SELECT * FROM {table}", sqlite_connection)
+    dataframe = pandas.read_sql_query(f"SELECT * FROM {table}", connection)
     return dataframe
 
 
-def sqlite_erase_from(sqlite_connection: sqlite3.Connection, table: str):
-    f"""
-    Erases SQLite {table} in {sqlite_connection}
-    @type sqlite_connection: sqlite3.Connection
+def sqlite_erase_from(table: str):
+    """
+    Erases SQLite {table} in SQLite_ClickSign.db
     @type table: str
-    @param sqlite_connection: a connection representing the database connection
     @param table: a string representing the table to erase
     """
-    dataframe = pandas.DataFrame()
+    dataframe = pandas.DataFrame([], columns=["None"])
     engine = create_engine(f"sqlite:///SQLite_ClickSign.db")
     dataframe.to_sql(table, engine, if_exists='replace', index=False)
-
-
-connection = sqlite3.connect("SQLite_ClickSign.db")
-create_sqlite_table_from(connection, "teste")
