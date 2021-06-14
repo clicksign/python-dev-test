@@ -4,7 +4,7 @@ import threading
 import time
 import numpy
 import pandas
-from numpy.random import uniform
+from numpy.random import uniform, randint
 from .standalone_tests import StandaloneTests
 from .variables import VARIABLES
 from .threads import create_dataframe_thread, run_thread, are_there_threads_alive
@@ -72,12 +72,12 @@ def _create_csv(dataframe: pandas.DataFrame):
     @param dataframe: a dataframe representing the file to be created
     """
     outputs_path = os.path.join(os.getcwd(), "data", "outputs")
-    number = 0
+    number = randint(0, 9999)
     name = f"{number}.csv"
     path = os.path.join(outputs_path, name)
     csv_file_exists = os.path.exists(path)
     while csv_file_exists:
-        number += 1
+        number = randint(0, 9999)
         name = f"{number}.csv"
         path = os.path.join(outputs_path, name)
         csv_file_exists = os.path.exists(path)
@@ -141,30 +141,24 @@ def clean_and_validate(dataframe: pandas.DataFrame):
     So a while loop verification is needed (aka. while not outputs_files_match)
     """
     _clean_outputs_folder()
-    outputs_path = os.path.join(os.getcwd(), "data", "outputs")
-    number_of_threads = VARIABLES["number_of_threads"]
-    outputs_files = os.listdir(outputs_path)
-    outputs_files_match = len(outputs_files) >= number_of_threads
-    while not outputs_files_match:
-        outputs_folder_is_cleaned = _clean_outputs_folder()
-        dataframe = _initial_clean_process(dataframe)
-        there_is_rows = dataframe.shape[0] > 0
-        if there_is_rows:
-            if outputs_folder_is_cleaned:
-                number_of_threads = VARIABLES["number_of_threads"]
-                dataframe_threads = create_dataframe_thread(dataframe, number_of_threads)
-                running_threads = []
-                for dataframe_thread in dataframe_threads:
-                    running_threads.append(
-                        threading.Thread(target=run_thread, args=(dataframe_thread, _validate))
-                    )
-                for thread in running_threads:
-                    thread.start()
-                    time.sleep(uniform(0, 1))
-                while are_there_threads_alive(running_threads):
-                    time.sleep(1)
-        outputs_files = os.listdir(outputs_path)
-        outputs_files_match = len(outputs_files) >= number_of_threads
+    outputs_folder_is_cleaned = _clean_outputs_folder()
+    dataframe = _initial_clean_process(dataframe)
+    dataframe_size = dataframe.shape[0]
+    there_is_rows = dataframe_size > 0
+    if there_is_rows:
+        if outputs_folder_is_cleaned:
+            number_of_threads = VARIABLES["number_of_threads"]
+            dataframe_threads = create_dataframe_thread(dataframe, number_of_threads)
+            running_threads = []
+            for dataframe_thread in dataframe_threads:
+                running_threads.append(
+                    threading.Thread(target=run_thread, args=(dataframe_thread, _validate))
+                )
+            for thread in running_threads:
+                thread.start()
+                time.sleep(uniform(0, 1))
+            while are_there_threads_alive(running_threads):
+                time.sleep(1)
     else:
         if VARIABLES["verbosity"]:
             print(f"Cleaning and validation concluded!")

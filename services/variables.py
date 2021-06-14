@@ -58,7 +58,7 @@ VARIABLES = {
         "<=50K": "Smaller",
     },
     "number_of_threads": 10,
-    "verbosity": True,
+    "verbosity": False,
     "run_every_seconds": 10,
-    "processing_data_limit": 1630,
+    "processing_data_limit": 30000,
 }
