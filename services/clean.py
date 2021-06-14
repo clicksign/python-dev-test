@@ -8,38 +8,6 @@ from numpy.random import uniform
 from .standalone_tests import StandaloneTests
 from .variables import VARIABLES
 from .threads import create_dataframe_thread, run_thread, are_there_threads_alive
-from .sqlite import create_sqlite_table_from
-
-
-def _concatenate_files() -> pandas.DataFrame:
-    """
-    Concatenates data_file_path and test_file_path
-    and creates SQLite temporary table in SQLite_ClickSign.db
-    @rtype: pandas.DataFrame
-    @return: a dataframe representing the concatenation of data_file_path
-    and test_file_path
-    """
-    if VARIABLES["verbosity"]:
-        print(f"Concatenating files!")
-    data_file_path = VARIABLES["data_file_path"]
-    test_file_path = VARIABLES["test_file_path"]
-    data_file_dataframe = pandas.read_csv(data_file_path,
-                                          skipinitialspace=True,
-                                          sep=',',
-                                          header=None,
-                                          names=VARIABLES["expected_header"],
-                                          skiprows=VARIABLES["data_file_skip_row"], )
-    data_file_dataframe_size = data_file_dataframe.shape[0]
-    test_file_dataframe = pandas.read_csv(test_file_path,
-                                          skipinitialspace=True,
-                                          sep=',',
-                                          header=None,
-                                          names=VARIABLES["expected_header"],
-                                          skiprows=VARIABLES["test_file_skip_row"], )
-    test_file_dataframe.index += data_file_dataframe_size
-    dataframe = pandas.concat([data_file_dataframe, test_file_dataframe])
-    create_sqlite_table_from(dataframe)
-    return dataframe
 
 
 def _initial_clean_process(dataframe: pandas.DataFrame) -> pandas.DataFrame:
@@ -159,10 +127,9 @@ def _validate(dataframe_list: list):
     _create_csv(dataframe)
 
 
-def clean():
+def clean(dataframe: pandas.DataFrame):
     """
-    Concatenates data_file_path and test_file_path (_concatenate_files)
-    and converts all fields on {dataframe} to string, them drops lines where
+    Converts all fields on {dataframe} to string, them drops lines where
     it finds known wrong elements listed on known_wrong_elements. If
     drop_duplicated is True, drops all {dataframe} duplicated lines
     (_initial_clean_process). Then deletes all files from "data/outputs/"
@@ -171,7 +138,6 @@ def clean():
     Then replaces all unwelcome chars and/or words on its values.
     Finally creates a csv on data/outputs for every thread.
     """
-    dataframe = _concatenate_files()
     dataframe = _initial_clean_process(dataframe)
     there_is_rows = dataframe.shape[0] > 0
     if there_is_rows:
@@ -190,5 +156,5 @@ def clean():
             while are_there_threads_alive(running_threads):
                 time.sleep(1)
             else:
-                print("Done!")
-                print(running_threads)
+                if VARIABLES["verbosity"]:
+                    print(f"Cleaning and validation concluded!")
