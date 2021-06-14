@@ -14,7 +14,8 @@ class FileTests(unittest.TestCase):
                        "expected_number_of_columns", "expected_header",
                        "expected_values_and_types", "known_wrong_elements",
                        "drop_duplicated", "unwelcome_chars_and_words",
-                       "number_of_threads", "verbosity"]
+                       "number_of_threads", "verbosity", "run_every_seconds",
+                       "processing_data_limit"]
         expected_value = True
         for element in VARIABLES:
             self.assertEqual(element in entry_value, expected_value)
@@ -65,6 +66,16 @@ class FileTests(unittest.TestCase):
     def test_variables_verbosity(self):
         entry_value = VARIABLES["verbosity"]
         self.assertEqual(type(entry_value), bool)
+
+    def test_variables_run_every_seconds(self):
+        entry_value = VARIABLES["run_every_seconds"]
+        self.assertEqual(type(entry_value), int)
+        self.assertGreater(entry_value, -1)
+
+    def test_variables_processing_data_limit(self):
+        entry_value = VARIABLES["processing_data_limit"]
+        self.assertEqual(type(entry_value), int)
+        self.assertGreater(entry_value, 0)
 
     def test_variables_unwelcome_chars_and_words(self):
         entry_value = VARIABLES["unwelcome_chars_and_words"]

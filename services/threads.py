@@ -2,7 +2,6 @@ import pandas
 from typing import Callable
 
 
-
 def create_dataframe_thread(dataframe: pandas.DataFrame, number_of_threads: int) -> list:
     """
     Splits the {dataframe} in dictionaries of rows based on records

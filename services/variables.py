@@ -59,4 +59,6 @@ VARIABLES = {
     },
     "number_of_threads": 10,
     "verbosity": True,
+    "run_every_seconds": 10,
+    "processing_data_limit": 1630,
 }

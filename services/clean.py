@@ -5,15 +5,16 @@ import time
 import numpy
 import pandas
 from numpy.random import uniform
-
 from .standalone_tests import StandaloneTests
 from .variables import VARIABLES
 from .threads import create_dataframe_thread, run_thread, are_there_threads_alive
+from .sqlite import create_sqlite_table_from
 
 
 def _concatenate_files() -> pandas.DataFrame:
     """
     Concatenates data_file_path and test_file_path
+    and creates SQLite temporary table in SQLite_ClickSign.db
     @rtype: pandas.DataFrame
     @return: a dataframe representing the concatenation of data_file_path
     and test_file_path
@@ -36,7 +37,9 @@ def _concatenate_files() -> pandas.DataFrame:
                                           names=VARIABLES["expected_header"],
                                           skiprows=VARIABLES["test_file_skip_row"], )
     test_file_dataframe.index += data_file_dataframe_size
-    return pandas.concat([data_file_dataframe, test_file_dataframe])
+    dataframe = pandas.concat([data_file_dataframe, test_file_dataframe])
+    create_sqlite_table_from(dataframe)
+    return dataframe
 
 
 def _initial_clean_process(dataframe: pandas.DataFrame) -> pandas.DataFrame:
