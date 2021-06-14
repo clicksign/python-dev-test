@@ -65,10 +65,6 @@ class StandaloneTests:
         return data_n_of_columns == expected_number_of_columns and test_n_of_columns == expected_number_of_columns
 
     @staticmethod
-    def test_output_file_existence(output_file_path: str) -> bool:
-        return os.path.exists(output_file_path)
-
-    @staticmethod
     def test_non_expected_values(string: str, column_number: int) -> bool:
         expected_values_and_types = VARIABLES["expected_values_and_types"]
         expected_values = expected_values_and_types[column_number]

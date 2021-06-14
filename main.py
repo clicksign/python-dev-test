@@ -1,7 +1,7 @@
 import sys
 import tests
-import services.validation as validation
 import unittest
+from services.clean import clean
 
 
 def main():
@@ -10,8 +10,8 @@ def main():
         if action == "-t" or action == "--test":
             suite = unittest.TestLoader().loadTestsFromModule(tests)
             unittest.TextTestRunner(verbosity=2).run(suite)
-        elif action == "-r" or action == "--run":
-            validation.main()
+        elif action == "-s" or action == "--start":
+            clean()
     except IndexError:
         print("SyntaxError: This is NOT a valid syntax.")
         print("Please use the following:")

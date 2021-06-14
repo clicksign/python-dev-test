@@ -4,7 +4,7 @@ VARIABLES = {
     "output_file_path": "data/output.csv",
     "data_file_skip_row": 0,
     "test_file_skip_row": 1,
-    "number_of_columns": 15,
+    "expected_number_of_columns": 15,
     "expected_header": ["age", "workclass", "fnlwgt", "education",
                         "education num", "marital status", "occupation",
                         "relationship", "race", "sex", "capital gain",
@@ -47,7 +47,7 @@ VARIABLES = {
         14: [">50K.", "<=50K.", ">50K", "<=50K"],
     },
     "known_wrong_elements": ["?"],
-    "drop_duplicated": False,
+    "drop_duplicated": True,
     "unwelcome_chars_and_words": {
         "-": " ",
         "&": " ",
@@ -57,4 +57,6 @@ VARIABLES = {
         ">50K": "Bigger",
         "<=50K": "Smaller",
     },
+    "number_of_threads": 10,
+    "verbosity": True,
 }
