@@ -7,6 +7,9 @@ from .variables import VARIABLES
 class FileTests(unittest.TestCase):
 
     def test_output_file_existence(self):
+        """
+        Tests if the path on output_file_path value exists and if is a str
+        """
         entry_value = VARIABLES["output_file_path"]
         expected_value = True
         self.assertEqual(type(entry_value), str)
@@ -66,12 +69,30 @@ class StandaloneTests:
 
     @staticmethod
     def test_non_expected_values(string: str, column_number: int) -> bool:
+        """
+        Verifies if {string} is a non-expected value of the {column_number} of expected_values_and_types
+        @type string: str
+        @type column_number: int
+        @rtype: bool
+        @param string: a string representing the supposedly non-expected value
+        @param column_number: a int representing the column index related to expected_values_and_types
+        @return: a boolean representing the non-expectation
+        """
         expected_values_and_types = VARIABLES["expected_values_and_types"]
         expected_values = expected_values_and_types[column_number]
         return string in expected_values
 
     @staticmethod
     def test_non_expected_types(string: str, column_number: int) -> bool:
+        """
+        Verifies if {string} is a non-expected type of the {column_number} of expected_values_and_types
+        @type string: str
+        @type column_number: int
+        @rtype: bool
+        @param string: a string representing the supposedly non-expected type
+        @param column_number: a int representing the column index related to expected_values_and_types
+        @return: a boolean representing the non-expectation
+        """
         expected_values_and_types = VARIABLES["expected_values_and_types"]
         expected_type = expected_values_and_types[column_number]
         try:

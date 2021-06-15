@@ -37,6 +37,15 @@ def sqlite_erase_create_or_update_from(table: str, starting_dataframe=None):
 
 
 def sqlite_table_exists(connection: sqlite3.Connection, table: str) -> bool:
+    """
+    Verifies if SQLite {table} in {connection} exists
+    @type connection: sqlite3.Connection
+    @type table: str
+    @rtype: bool
+    @param connection: a connection representing the database connection
+    @param table: a string representing the table name
+    @return: a boolean representing the table existence
+    """
     try:
         pandas.read_sql_query(f"SELECT * FROM {table}", connection)
     except pandas.io.sql.DatabaseError:

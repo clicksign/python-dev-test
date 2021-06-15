@@ -12,7 +12,7 @@ from .threads import create_dataframe_thread, run_thread, are_there_threads_aliv
 
 def _initial_clean_process(dataframe: pandas.DataFrame) -> pandas.DataFrame:
     """
-    Converts all fields on {dataframe} to string, them drops lines where
+    Converts all fields on {dataframe} to string, then drops lines where
     it finds known wrong elements listed on known_wrong_elements. If
     drop_duplicated is True, drops all {dataframe} duplicated lines.
     @type dataframe: pandas.DataFrame
@@ -89,7 +89,7 @@ def _create_csv(dataframe: pandas.DataFrame):
 
 def _validate(dataframe_list: list):
     """
-    Converts all fields on {dataframe} to string, them drops lines where
+    Converts all fields on {dataframe} to string, then drops lines where
     test_non_expected_types and/or test_non_expected_values is False.
     Then replaces all unwelcome chars and/or words on its values.
     Finally creates a csv in data/outputs (_create_csv)

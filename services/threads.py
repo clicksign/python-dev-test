@@ -26,11 +26,6 @@ def create_dataframe_thread(dataframe: pandas.DataFrame, number_of_threads: int)
     elif number_of_threads:
         threads_size = int(dataframe_size / number_of_threads)
         threads_rest = dataframe_size % number_of_threads
-        print(
-            f"number_of_threads: {number_of_threads}",
-            f"threads_size: {threads_size}",
-            f"threads_rest: {threads_rest}",
-        )
         if number_of_threads == 1:
             dataframes.append(temp_rows_list)
         elif threads_size == 1 and (threads_rest == 1 or threads_rest == 0):

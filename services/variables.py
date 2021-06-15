@@ -1,7 +1,6 @@
 VARIABLES = {
     "data_file_path": "data/Adult.data",
     "test_file_path": "data/Adult.test",
-    "output_file_path": "data/output.csv",
     "data_file_skip_row": 0,
     "test_file_skip_row": 1,
     "expected_number_of_columns": 15,
@@ -47,7 +46,7 @@ VARIABLES = {
         14: [">50K.", "<=50K.", ">50K", "<=50K"],
     },
     "known_wrong_elements": ["?"],
-    "drop_duplicated": True,
+    "drop_duplicated": False,
     "unwelcome_chars_and_words": {
         "-": " ",
         "&": " ",
@@ -57,8 +56,8 @@ VARIABLES = {
         ">50K": "Bigger",
         "<=50K": "Smaller",
     },
-    "number_of_threads": 10,
+    "number_of_threads": 1,
     "verbosity": False,
     "run_every_seconds": 10,
-    "processing_data_limit": 30000,
+    "processing_data_limit": 1630,
 }

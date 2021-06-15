@@ -1,4 +1,191 @@
-# Desafio - Dev Python
+#Desafio - Dev Python
+A script capable of collecting data from two data files, validating its content
+and writing it into a SQLite database.
+
+# Dependencies
+Tested on Python 3.9+<br>
+pandas library<br>
+sqlalchemy library<br>
+
+# Type
+Read and write.
+
+# Variables
+All variables may found at `services.variables.py VARIABLES`.<br>
+- `data_file_path` a string variable representing
+  the data file path related to project folder.<br>
+Sample: `"data_file_path": "data/Adult.data"`<br>
+  
+- `test_file_path` a string variable representing
+  the test file path related to project folder.<br>
+Sample: `"test_file_path": "data/Adult.test"`<br>
+  
+- `data_file_skip_row` an integer variable representing the number
+  of first rows to avoid during data process for data file.<br>
+Sample: `"data_file_skip_row": 0`<br>
+  
+- `test_file_skip_row` an integer variable representing the number
+  of first rows to avoid during data process for test file.<br>
+Sample: `"test_file_skip_row": 1`<br>
+  
+- `expected_number_of_columns` an integer variable representing the number
+  of expected columns for data file and test file.<br>
+Sample: `"expected_number_of_columns": 15`<br>
+
+- `expected_header` a list of strings representing the column names
+  for data file and test file.<br>
+Sample: `"expected_header": ["age", "workclass", "fnlwgt", "education",
+                        "education num", "marital status", "occupation",
+                        "relationship", "race", "sex", "capital gain",
+                        "capital loss", "hours per week", "native country",
+                        "class"]`<br>
+  
+- `expected_values_and_types` a dictionary of integers representing the column position for 
+  data file and test file which values may be a list of strings representing the expected values,
+  or a type representing the expected typing for data file and test file.<br>
+Sample: `"expected_values_and_types": {
+        0: int,
+        1: ["Private", "Self-emp-not-inc", "Self-emp-inc",
+            "Federal-gov", "Local-gov", "State-gov", "Without-pay",
+            "Never-worked"],
+        2: int,
+        3: ["Bachelors", "Some-college", "11th", "HS-grad", "Prof-school",
+            "Assoc-acdm", "Assoc-voc", "9th", "7th-8th", "12th", "Masters",
+            "1st-4th", "10th", "Doctorate", "5th-6th", "Preschool"],
+        4: int,
+        5: ["Married-civ-spouse", "Divorced", "Never-married", "Separated",
+            "Widowed", "Married-spouse-absent", "Married-AF-spouse"],
+        6: ["Tech-support", "Craft-repair", "Other-service",
+            "Sales", "Exec-managerial", "Prof-specialty",
+            "Handlers-cleaners", "Machine-op-inspct", "Adm-clerical",
+            "Farming-fishing", "Transport-moving", "Priv-house-serv",
+            "Protective-serv", "Armed-Forces"],
+        7: ["Wife", "Own-child", "Husband", "Not-in-family",
+            "Other-relative", "Unmarried"],
+        8: ["White", "Asian-Pac-Islander", "Amer-Indian-Eskimo",
+            "Other", "Black"],
+        9: ["Female", "Male"],
+        10: int,
+        11: int,
+        12: int,
+        13: ["United-States", "Cambodia", "England", "Puerto-Rico",
+             "Canada", "Germany", "Outlying-US(Guam-USVI-etc)", "India",
+             "Japan", "Greece", "South", "China", "Cuba", "Iran",
+             "Honduras", "Philippines", "Italy", "Poland", "Jamaica",
+             "Vietnam", "Mexico", "Portugal", "Ireland", "France",
+             "Dominican-Republic", "Laos", "Ecuador", "Taiwan",
+             "Haiti", "Columbia", "Hungary", "Guatemala", "Nicaragua",
+             "Scotland", "Thailand", "Yugoslavia", "El-Salvador",
+             "Trinadad&Tobago", "Peru", "Hong", "Holand-Netherlands"],
+        14: [">50K.", "<=50K.", ">50K", "<=50K"],
+    }`<br>
+  
+- `known_wrong_elements` a list of strings representing the known wrong elements that may
+  compromise the data file and/or test file.<br>
+Sample: `"known_wrong_elements": ["?"]`<br>
+
+- `drop_duplicated` a boolean representing the duplicated rows dropping execution.<br>
+Sample: `"drop_duplicated": True`<br>
+
+- `unwelcome_chars_and_words` a dictionary of strings representing the unwelcome characters or words
+  which values are strings representing the correct case.<br>
+Sample: `"unwelcome_chars_and_words": {
+        "-": " ",
+        "&": " ",
+        "(": " ",
+        ")": " ",
+        ".": " ",
+        ">50K": "Bigger",
+        "<=50K": "Smaller",
+    }`<br>
+  
+- `number_of_threads` an integer variable representing the number
+  of threads used to process data file and test file.<br>
+Sample: `"number_of_threads": 10`<br>
+
+- `verbosity` a boolean representing the code verbosity.<br>
+Sample: `"verbosity": False`<br>
+
+- `run_every_seconds` an integer variable representing the seconds delay
+  proceeding with the next data process.<br>
+Sample: `"run_every_seconds": 10`<br>
+
+- `processing_data_limit` an integer variable representing the number of rows
+  to be processed every execution.<br>
+Sample: `"processing_data_limit": 1630`<br>
+
+# Variables restrictions
+Use `main.py -t` to rapidly verify all variables compliance.<br>
+1) All variables key must exist in `variables.py VARIABLES`;
+2) All variables must be fulfilled;
+3) `data_file_path` value must be a string and result in
+an existing path;
+4) `test_file_path` value must be a string and result in
+an existing path;
+5) `data_file_skip_row` value must be neutral or a positive integer
+   and given the skipped rows pandas must be able to parse data file;
+6) `test_file_skip_row` value must be neutral or a positive integer
+   and given the skipped rows pandas must be able to parse test file;
+7) `expected_number_of_columns` value must be a positive integer
+   and represent the number of columns of data file and test file;
+8) `expected_header` value must be a list of strings
+   and its length must represent the number of columns of data file and test file;
+9) `expected_values_and_types` value must be a dictionary of integers keys
+   of types or lists of strings values and its length must represent the number
+   of columns of data file and test file;
+an existing path;
+10) `drop_duplicated` value must be a bool;
+11) `verbosity` value must be a bool;
+12) `run_every_seconds` value must be neutral or a positive integer;
+13) `processing_data_limit` value must be a positive integer;
+14) `unwelcome_chars_and_words` value must be a dictionary of strings keys
+   of strings values;
+15) `number_of_threads` value must be neutral or a positive integer.
+    
+# Getting started
+1) Install pandas library with `pip install pandas`;<br>
+2) Install sqlalchemy library with `pip install sqlalchemy`;<br>
+3) Access `services.variables.py` to configure the script;<br>
+4) Perform a variables' compliance test with `py.exe main.py --test`;<br>
+5) You can start the script manually with `py.exe main.py --start`;<br>
+6) You can continue from where you left off with `py.exe main.py --proceed`;<br>
+7) You can process only the first rows of data with  `py.exe main.py --start --one-time`;<br>
+8) You can continue from where you left off running only once with `py.exe main.py --proceed --one-time`.<br>
+
+`-t | --test` tests variables and other functions to process data.<br>
+`-s | --start` erases the database and start from scratch. Running
+based on `services.variables.py` until the end of the file or interruption.<br>
+`-p | --proceed` continue where you left off. Running
+based on `services.variables.py` until the end of the file or interruption.<br>
+`-ot | --one-time` run the previously command only one time. <br>
+`main.py <-t | --test | -s | --start | -p | --proceed> [-ot | --one-time]`
+
+
+# More information
+Author(s): Bruno Lançoni<br>
+License: GNU General Public License family<br>
+version: 1.0.0
+
+# Utilities
+Threads in this script are useful only on 100.000+ rows process.<br>
+
+| Number of threads | Rows processed | Elapsed time (s) |
+|:-----------------:|:--------------:|:----------------:|
+|         1         |      1000      |       3.5        |
+|         10        |      1000      |       7.7        |
+|         15        |      1000      |       11.7       |
+|         1         |      10000     |       12.5       |
+|         10        |      10000     |       13.2       |
+|         15        |      10000     |       13.0       |
+|         1         |      50000     |       49.0       |
+|         10        |      50000     |       52.0       |
+|         15        |      50000     |       52.4       |
+|         1         |      100000    |       103.6      |
+|         10        |      100000    |       101.8      |
+|         15        |      100000    |       103.8      |
+
+---
+# Descrição da prova
 
 Este repositório possui um teste que visa avaliar sua curiosidade, seus conhecimentos em Python, análise e limpeza de dados, Storytelling e conceitos relacionados a processos ETL/ELT. O teste possui seu próprio conjunto de arquivos, parâmetros, instruções e estratégias para ser resolvido. Portanto, estude cada detalhe com sabedoria.
 

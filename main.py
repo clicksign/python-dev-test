@@ -62,6 +62,24 @@ def concatenate_files() -> pandas.DataFrame:
 
 
 def process_data_from(dataframe: pandas.DataFrame, periodically: bool, scheduler: sched.scheduler):
+    """
+    Collects data from SQLite database, determines the amount of data that will be processed based
+    on {dataframe}, processed rows gathered from config table and processing data limit.
+    If data process is nearly concluded, change {periodically} to False.
+    Converts all fields on {dataframe} to string, then drops lines where
+    it finds known wrong elements listed on known_wrong_elements. If drop_duplicated is True,
+    drops all {dataframe} duplicated lines. (clean_and_validate)
+    Concatenates all files in "data/outputs/" (concatenate_outputs) then verifies if its presents
+    any modification regarding data table. If presents, updates SQLite database and update table
+    config processed rows.
+    If {periodically}, reschedule this function.
+    @type dataframe: pandas.Dataframe
+    @type periodically: bool
+    @type scheduler: sched.scheduler
+    @param dataframe: a dataframe representing the data
+    @param periodically:
+    @param scheduler:
+    """
     with sqlite3.connect("SQLite_ClickSign.db") as connection:
         data_table_exists = sqlite_table_exists(connection, "data")
         if not data_table_exists:
@@ -84,7 +102,7 @@ def process_data_from(dataframe: pandas.DataFrame, periodically: bool, scheduler
         dataframe_partial = dataframe[processed_data:future_processed_data]
     clean_and_validate(dataframe_partial)
     dataframe_outputs = concatenate_outputs()
-    print(f"Processing {processing_data_limit} rows!")
+    print(f"Processing {dataframe_partial.shape[0]} rows!")
     print(f"{dataframe_outputs.shape[0]} are compliance!")
     if sqlite_data_dataframe.empty:
         dataframe_sqlite = dataframe_outputs
@@ -95,9 +113,7 @@ def process_data_from(dataframe: pandas.DataFrame, periodically: bool, scheduler
     if not dataframe_sqlite.empty:
         there_is_no_difference_between_dataframes = difference_between_dataframes.empty
         if there_is_no_difference_between_dataframes:
-            answer = input("All data seems processed! Are you sure to proceed? (Y/N): ")
-            if answer.lower() in ["n", "no"]:
-                return
+            return
         sqlite_erase_create_or_update_from("data", dataframe_sqlite)
     config_dataframe = pandas.DataFrame([future_processed_data], columns=["processed rows"])
     sqlite_erase_create_or_update_from("config", config_dataframe)
