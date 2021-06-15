@@ -4,18 +4,6 @@ from sqlalchemy import create_engine
 from .variables import VARIABLES
 
 
-def sqlite_create_table_on(dataframe: pandas.DataFrame, table: str):
-    """
-    Creates SQLite {table} in SQLite_ClickSign.db based on {dataframe}
-    @type dataframe: pandas.Dataframe
-    @type table: str
-    @param dataframe: a dataframe representing the table to be created
-    @param table: a string representing the table name
-    """
-    engine = create_engine(f"sqlite:///SQLite_ClickSign.db")
-    dataframe.to_sql(table, engine, if_exists='replace', index=False)
-
-
 def sqlite_get_dataframe_from(connection: sqlite3.Connection, table: str) -> pandas.DataFrame:
     """
     Gets SQLite {table} in {connection}
@@ -30,9 +18,10 @@ def sqlite_get_dataframe_from(connection: sqlite3.Connection, table: str) -> pan
     return dataframe
 
 
-def sqlite_erase_from(table: str, starting_dataframe=None):
+def sqlite_erase_create_or_update_from(table: str, starting_dataframe=None):
     """
-    Erases SQLite {table} in SQLite_ClickSign.db
+    Erases, create or update SQLite {table} in SQLite_ClickSign.db
+    based on {starting_dataframe}
     @type table: str
     @type starting_dataframe: any
     @param table: a string representing the table to erase

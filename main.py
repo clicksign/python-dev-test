@@ -7,7 +7,7 @@ import pandas
 import tests
 import unittest
 from services.variables import VARIABLES
-from services.sqlite import sqlite_erase_from, sqlite_get_dataframe_from, sqlite_create_table_on, sqlite_table_exists
+from services.sqlite import sqlite_get_dataframe_from, sqlite_table_exists, sqlite_erase_create_or_update_from
 from services.clean import clean_and_validate
 
 
@@ -63,11 +63,14 @@ def concatenate_files() -> pandas.DataFrame:
 
 def process_data_from(dataframe: pandas.DataFrame, periodically: bool, scheduler: sched.scheduler):
     with sqlite3.connect("SQLite_ClickSign.db") as connection:
-        sqlite_data_dataframe = sqlite_get_dataframe_from(connection, "data")
+        data_table_exists = sqlite_table_exists(connection, "data")
+        if not data_table_exists:
+            sqlite_erase_create_or_update_from("data")
         config_table_exists = sqlite_table_exists(connection, "config")
         if not config_table_exists:
             config_dataframe = pandas.DataFrame([0], columns=["processed rows"])
-            sqlite_create_table_on(config_dataframe, "config")
+            sqlite_erase_create_or_update_from("config", config_dataframe)
+        sqlite_data_dataframe = sqlite_get_dataframe_from(connection, "data")
         sqlite_config_dataframe = sqlite_get_dataframe_from(connection, "config")
     processed_data = sqlite_config_dataframe.loc[0]["processed rows"]
     dataframe_size = dataframe.shape[0]
@@ -81,6 +84,8 @@ def process_data_from(dataframe: pandas.DataFrame, periodically: bool, scheduler
         dataframe_partial = dataframe[processed_data:future_processed_data]
     clean_and_validate(dataframe_partial)
     dataframe_outputs = concatenate_outputs()
+    print(f"Processing {processing_data_limit} rows!")
+    print(f"{dataframe_outputs.shape[0]} are compliance!")
     if sqlite_data_dataframe.empty:
         dataframe_sqlite = dataframe_outputs
     else:
@@ -93,11 +98,14 @@ def process_data_from(dataframe: pandas.DataFrame, periodically: bool, scheduler
             answer = input("All data seems processed! Are you sure to proceed? (Y/N): ")
             if answer.lower() in ["n", "no"]:
                 return
-        sqlite_create_table_on(dataframe_sqlite, "data")
+        sqlite_erase_create_or_update_from("data", dataframe_sqlite)
     config_dataframe = pandas.DataFrame([future_processed_data], columns=["processed rows"])
-    sqlite_create_table_on(config_dataframe, "config")
+    sqlite_erase_create_or_update_from("config", config_dataframe)
     if periodically:
         run_every_seconds = VARIABLES["run_every_seconds"]
+        if run_every_seconds:
+            print(f"Waiting {run_every_seconds} seconds...")
+            print("")
         scheduler.enter(run_every_seconds, 1, process_data_from, (dataframe, periodically, scheduler,))
 
 
@@ -114,11 +122,9 @@ def main():
             unittest.TextTestRunner(verbosity=2).run(principal_suite)
         elif action in ["-s", "--start", "-p", "--proceed", ]:
             if action in ["-s", "--start", ]:
-                sqlite_erase_from("data")
+                sqlite_erase_create_or_update_from("data")
                 config_dataframe = pandas.DataFrame([0], columns=["processed rows"])
-                sqlite_erase_from("config", config_dataframe)
-
-
+                sqlite_erase_create_or_update_from("config", config_dataframe)
             dataframe = concatenate_files()
             scheduler = sched.scheduler(time.time, time.sleep)
             if additional_action in ["-ot", "--one-time", ]:
