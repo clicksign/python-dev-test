@@ -1,0 +1,4 @@
+
+*.pyc
+SQLite_ClickSign.db
+data/outputs/
