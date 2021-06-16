@@ -65,10 +65,27 @@ VARIABLES = {
                                "relationship", "race", "sex", "capitalgain",
                                "capitalloss", "hoursperweek", "nativecountry",
                                "class"],
-    "analysis_relation": {
-        "two_grouped_bar": {
-            "sex": "Male",
-            "sex": "Female",
-        }
-    }
+    "analysis_relation": [
+        ["two_grouped_bar",
+         [
+             ["sex", "Male"],
+             ["sex", "Female"],
+             "race",
+         ],
+         ],
+        ["two_grouped_bar",
+         [
+             ["sex", "Male"],
+             ["sex", "Female"],
+             "class",
+         ],
+         ],
+        ["two_grouped_bar",
+         [
+             ["sex", "Male"],
+             ["sex", "Female"],
+             "education",
+         ],
+         ],
+    ],
 }

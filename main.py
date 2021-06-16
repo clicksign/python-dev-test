@@ -10,7 +10,7 @@ import unittest
 from services.variables import VARIABLES
 from services.sqlite import sqlite_get_dataframe_from, sqlite_table_exists, sqlite_erase_create_or_update_from
 from services.clean import clean_and_validate
-from services.analyse import create_analysis_folder, _create_two_grouped_bar_graph_in
+from services.analyse import create_analysis_folder, _create_two_grouped_bar_graph_in, graph_dispatcher
 
 
 def concatenate_outputs() -> pandas.DataFrame:
@@ -128,33 +128,34 @@ def process_data_from(dataframe: pandas.DataFrame, periodically: bool, scheduler
 
 
 def main():
+    #try:
+    action = sys.argv[1]
     try:
-        action = sys.argv[1]
-        try:
-            additional_action = sys.argv[2]
-        except IndexError:
-            additional_action = None
-        print("Data processing started. Use CTRL^C to stop!")
-        if action in ["-t", "--test", ]:
-            principal_suite = unittest.TestLoader().loadTestsFromModule(tests)
-            unittest.TextTestRunner(verbosity=2).run(principal_suite)
-        elif action in ["-s", "--start", "-p", "--proceed", ]:
-            if action in ["-s", "--start", ]:
-                sqlite_erase_create_or_update_from("data")
-                config_dataframe = pandas.DataFrame([0], columns=["processed rows"])
-                sqlite_erase_create_or_update_from("config", config_dataframe)
-            dataframe = concatenate_files()
-            scheduler = sched.scheduler(time.time, time.sleep)
-            if additional_action in ["-ot", "--one-time", ]:
-                scheduler.enter(0, 1, process_data_from, (dataframe, False, scheduler,))
-            else:
-                scheduler.enter(0, 1, process_data_from, (dataframe, True, scheduler,))
-            scheduler.run()
-        elif action in ["-a", "--analyse", ]:
-            path = create_analysis_folder()
-            _create_two_grouped_bar_graph_in("Teste_X", "Teste_Y", ["A", "B"], [1, 2], [3, 4], "X", "Y", path)
+        additional_action = sys.argv[2]
+    except IndexError:
+        additional_action = None
+    print("Data processing started. Use CTRL^C to stop!")
+    if action in ["-t", "--test", ]:
+        principal_suite = unittest.TestLoader().loadTestsFromModule(tests)
+        unittest.TextTestRunner(verbosity=2).run(principal_suite)
+    elif action in ["-s", "--start", "-p", "--proceed", ]:
+        if action in ["-s", "--start", ]:
+            sqlite_erase_create_or_update_from("data")
+            config_dataframe = pandas.DataFrame([0], columns=["processed rows"])
+            sqlite_erase_create_or_update_from("config", config_dataframe)
+        dataframe = concatenate_files()
+        scheduler = sched.scheduler(time.time, time.sleep)
+        if additional_action in ["-ot", "--one-time", ]:
+            scheduler.enter(0, 1, process_data_from, (dataframe, False, scheduler,))
         else:
-            raise IndexError
+            scheduler.enter(0, 1, process_data_from, (dataframe, True, scheduler,))
+        scheduler.run()
+    elif action in ["-a", "--analyse", ]:
+        analysis_folder_path = create_analysis_folder()
+        graph_dispatcher(analysis_folder_path)
+    else:
+        raise IndexError
+        """
     except IndexError:
         print("SyntaxError: This is NOT a valid syntax.")
         print("Please use the following:")
@@ -167,7 +168,7 @@ def main():
     except KeyboardInterrupt:
         print("Data processing stopped with CTRL^C.")
         print("Use <-p | --proceed> to continue where you left off!")
-
+"""
 
 if __name__ == '__main__':
     main()

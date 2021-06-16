@@ -162,33 +162,43 @@ class FileTests(unittest.TestCase):
         Tests if analysis_relation key is a str
         Tests if analysis_relation keys is in ["two_grouped_bar"]
         For two_grouped_bar key:
-            Tests if two_grouped_bar is a dict
-            Tests if two_grouped_bar key is a str
-            Tests if two_grouped_bar value is str
-            Tests if two_grouped_bar key is in expected_header
-            Tests if two_grouped_bar value is in expected_values_and_types related column value
-
-
+            Tests if two_grouped_bar is a three length list
+            Tests if two_grouped_bar first value is a list
+            Tests if two_grouped_bar second value is a list
+            Tests if two_grouped_bar third value is a str
+            Tests if two_grouped_bar list values are str
+            Tests if two_grouped_bar list first values are in expected_header
+            Tests if two_grouped_bar list second values are in expected_values_and_types related column value
         """
         entry_value_analysis_relation = VARIABLES["analysis_relation"]
         entry_value_expected_header = VARIABLES["expected_header"]
         entry_value_expected_values_and_types = VARIABLES["expected_values_and_types"]
         expected_values = ["two_grouped_bar"]
-        self.assertEqual(type(entry_value_analysis_relation), dict)
+        self.assertEqual(type(entry_value_analysis_relation), list)
         for element in entry_value_analysis_relation:
-            self.assertEqual(type(element), str)
-            self.assertTrue(element in expected_values)
-            if element == "two_grouped_bar":
-                entry_value_element = entry_value_analysis_relation[element]
-                self.assertEqual(type(entry_value_element), dict)
-                for inner_element in entry_value_element:
-                    self.assertEqual(type(inner_element), str)
-                    self.assertEqual(type(entry_value_element[inner_element]), str)
-                    self.assertTrue(inner_element in entry_value_expected_header)
-                    inner_element_index = entry_value_expected_header.index(inner_element)
-                    self.assertEqual(type(entry_value_expected_values_and_types[inner_element_index]), list)
-                    self.assertTrue(entry_value_element[inner_element]
-                                    in entry_value_expected_values_and_types[inner_element_index])
+            self.assertEqual(type(element), list)
+            self.assertTrue(element[0] in expected_values)
+            if element[0] == "two_grouped_bar":
+                self.assertEqual(type(element[1]), list)
+                self.assertEqual(len(element[1]), 3)
+                self.assertEqual(type(element[1][0]), list)
+                self.assertEqual(type(element[1][1]), list)
+                self.assertEqual(type(element[1][2]), str)
+                self.assertEqual(type(element[1][0][0]), str)
+                self.assertEqual(type(element[1][0][1]), str)
+                self.assertEqual(type(element[1][1][0]), str)
+                self.assertEqual(type(element[1][1][1]), str)
+                self.assertTrue(element[1][0][0] in entry_value_expected_header)
+                self.assertTrue(element[1][1][0] in entry_value_expected_header)
+                self.assertTrue(element[1][2] in entry_value_expected_header)
+                inner_element_0_index = entry_value_expected_header.index(element[1][0][0])
+                inner_element_1_index = entry_value_expected_header.index(element[1][1][0])
+                inner_element_2_index = entry_value_expected_header.index(element[1][2])
+                self.assertEqual(type(entry_value_expected_values_and_types[inner_element_0_index]), list)
+                self.assertEqual(type(entry_value_expected_values_and_types[inner_element_1_index]), list)
+                self.assertEqual(type(entry_value_expected_values_and_types[inner_element_2_index]), list)
+                self.assertTrue(element[1][0][1] in entry_value_expected_values_and_types[inner_element_0_index])
+                self.assertTrue(element[1][1][1] in entry_value_expected_values_and_types[inner_element_1_index])
 
     def test_threading_with_one_row_one_thread(self):
         """

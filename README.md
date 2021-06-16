@@ -128,18 +128,20 @@ Sample: `"columns_to_be_analysed": ["age", "workclass", "education",
   
 
 
-- `analysis_relation` a dictionary of strings representing the graph type, 
+- `analysis_relation` a list of lists representing the graph type, 
   being:
-  - `two_grouped_bar` a two grouped bar graph. Must be a two
-    length dict containing two strings keys representing
-    the column name with a string value representing the
-    row value.<br>
-    Sample: `"analysis_relation": {
-            "two_grouped_bar": {
-                "sex": "Male",
-                "sex": "Female",
-            }
-        }`
+  - `two_grouped_bar` a two grouped bar graph. Must be a three
+    length list containing two lists of strings representing
+    the column name, and the row value; and a string
+    representing the consideration column.<br>
+    Sample: `"analysis_relation": [
+                ["two_grouped_bar",
+                    [
+                        ["sex", "Male"],
+                        ["sex", "Female"],
+                        "race",
+                    ],
+                    ],`
 
 # Variables restrictions
 Use `main.py -t` to rapidly verify all variables compliance.<br>
@@ -170,9 +172,9 @@ an existing path;
 15) `number_of_threads` value must be neutral or a positive integer;
 16) `columns_to_be_analysed` value must be a list of strings
    and its content must exists in `expected_header`;    
-17) `analysis_relation` value must be a dict of:<br>
-    - `two_grouped_bar` value must be a dict of strings keys 
-    of strings values;
+17) `analysis_relation` value must be a list of:<br>
+    - `two_grouped_bar` value and a list of two lists of 
+      strings, and a string;
 
     
 # Getting started
