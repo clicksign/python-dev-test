@@ -18,7 +18,7 @@ class FileTests(unittest.TestCase):
                        "expected_values_and_types", "known_wrong_elements",
                        "drop_duplicated", "unwelcome_chars_and_words",
                        "number_of_threads", "verbosity", "run_every_seconds",
-                       "processing_data_limit"]
+                       "processing_data_limit", "columns_to_be_analysed"]
         expected_value = True
         for element in VARIABLES:
             self.assertEqual(element in entry_value, expected_value)
@@ -64,10 +64,10 @@ class FileTests(unittest.TestCase):
         """
         Tests if expected_number_of_columns is a int, if expected_header is a list and
         if expected_values_and_types is a dict
-        Tests if each entry_value_expected_header value is a str
-        Tests if each entry_value_expected_values_and_types key is a int
-        Tests if each entry_value_expected_values_and_types value is a list or type
-        Tests if entry_value_expected_values_and_types length matches expected_number_of_columns
+        Tests if each expected_header value is a str
+        Tests if each expected_values_and_types key is a int
+        Tests if each expected_values_and_types value is a list or type
+        Tests if expected_values_and_types length matches expected_number_of_columns
         Tests if expected_header length matches expected_number_of_columns
         """
         entry_value_expected_number_of_columns = VARIABLES["expected_number_of_columns"]
@@ -87,6 +87,19 @@ class FileTests(unittest.TestCase):
                     self.assertEqual(type(inner_element), str)
         self.assertEqual(len(entry_value_expected_values_and_types), entry_value_expected_number_of_columns)
         self.assertEqual(len(entry_value_expected_header), entry_value_expected_number_of_columns)
+
+    def test_variables_columns_to_be_analysed(self):
+        """
+        Tests if columns_to_be_analysed is a list
+        Tests if each columns_to_be_analysed value is a str
+        Tests if each columns_to_be_analysed value is in expected_header
+        """
+        entry_value_columns_to_be_analysed = VARIABLES["columns_to_be_analysed"]
+        entry_value_expected_header = VARIABLES["expected_header"]
+        self.assertEqual(type(entry_value_columns_to_be_analysed), list)
+        for element in entry_value_columns_to_be_analysed:
+            self.assertEqual(type(element), str)
+            self.assertTrue(element in entry_value_expected_header)
 
     def test_variables_drop_duplicated(self):
         """

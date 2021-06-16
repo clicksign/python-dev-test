@@ -148,6 +148,8 @@ def main():
             else:
                 scheduler.enter(0, 1, process_data_from, (dataframe, True, scheduler,))
             scheduler.run()
+        elif action in ["-a", "--analyse", ]:
+            pass
         else:
             raise IndexError
     except IndexError:
@@ -157,7 +159,8 @@ def main():
         print("-s  | --start      Start from scratch")
         print("-p  | --proceed    Continue where you left off")
         print("-ot | --one-time   Run just once")
-        print("main.py <-t | --test | -s | --start | -p | --proceed> [-ot | --one-time]")
+        print("-a  | --analyse    Perform a SQLite content analysis")
+        print("main.py <-t | --test | -s | --start | -p | --proceed | -a  | --analyse> [-ot | --one-time]")
     except KeyboardInterrupt:
         print("Data processing stopped with CTRL^C.")
         print("Use <-p | --proceed> to continue where you left off!")

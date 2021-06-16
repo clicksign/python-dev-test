@@ -1,4 +1,4 @@
-#Desafio - Dev Python
+# Desafio - Dev Python
 A script capable of collecting data from two data files, validating its content
 and writing it into a SQLite database.
 
@@ -14,31 +14,31 @@ Read and write.
 All variables may found at `services.variables.py VARIABLES`.<br>
 - `data_file_path` a string variable representing
   the data file path related to project folder.<br>
-Sample: `"data_file_path": "data/Adult.data"`<br>
+Sample: `"data_file_path": "data/Adult.data"`
   
 - `test_file_path` a string variable representing
   the test file path related to project folder.<br>
-Sample: `"test_file_path": "data/Adult.test"`<br>
+Sample: `"test_file_path": "data/Adult.test"`
   
 - `data_file_skip_row` an integer variable representing the number
   of first rows to avoid during data process for data file.<br>
-Sample: `"data_file_skip_row": 0`<br>
+Sample: `"data_file_skip_row": 0`
   
 - `test_file_skip_row` an integer variable representing the number
   of first rows to avoid during data process for test file.<br>
-Sample: `"test_file_skip_row": 1`<br>
+Sample: `"test_file_skip_row": 1`
   
 - `expected_number_of_columns` an integer variable representing the number
   of expected columns for data file and test file.<br>
-Sample: `"expected_number_of_columns": 15`<br>
+Sample: `"expected_number_of_columns": 15`
 
-- `expected_header` a list of strings representing the column names
+- `expected_header` a list of strings representing the ordered column names
   for data file and test file.<br>
 Sample: `"expected_header": ["age", "workclass", "fnlwgt", "education",
                         "education num", "marital status", "occupation",
                         "relationship", "race", "sex", "capital gain",
                         "capital loss", "hours per week", "native country",
-                        "class"]`<br>
+                        "class"]`
   
 - `expected_values_and_types` a dictionary of integers representing the column position for 
   data file and test file which values may be a list of strings representing the expected values,
@@ -78,14 +78,14 @@ Sample: `"expected_values_and_types": {
              "Scotland", "Thailand", "Yugoslavia", "El-Salvador",
              "Trinadad&Tobago", "Peru", "Hong", "Holand-Netherlands"],
         14: [">50K.", "<=50K.", ">50K", "<=50K"],
-    }`<br>
+    }`
   
 - `known_wrong_elements` a list of strings representing the known wrong elements that may
   compromise the data file and/or test file.<br>
-Sample: `"known_wrong_elements": ["?"]`<br>
+Sample: `"known_wrong_elements": ["?"]`
 
 - `drop_duplicated` a boolean representing the duplicated rows dropping execution.<br>
-Sample: `"drop_duplicated": True`<br>
+Sample: `"drop_duplicated": True`
 
 - `unwelcome_chars_and_words` a dictionary of strings representing the unwelcome characters or words
   which values are strings representing the correct case.<br>
@@ -97,22 +97,30 @@ Sample: `"unwelcome_chars_and_words": {
         ".": " ",
         ">50K": "Bigger",
         "<=50K": "Smaller",
-    }`<br>
+    }`
   
 - `number_of_threads` an integer variable representing the number
   of threads used to process data file and test file.<br>
-Sample: `"number_of_threads": 10`<br>
+Sample: `"number_of_threads": 10`
 
 - `verbosity` a boolean representing the code verbosity.<br>
-Sample: `"verbosity": False`<br>
+Sample: `"verbosity": False`
 
 - `run_every_seconds` an integer variable representing the seconds delay
   proceeding with the next data process.<br>
-Sample: `"run_every_seconds": 10`<br>
+Sample: `"run_every_seconds": 10`
 
 - `processing_data_limit` an integer variable representing the number of rows
   to be processed every execution.<br>
-Sample: `"processing_data_limit": 1630`<br>
+Sample: `"processing_data_limit": 1630`
+  
+- `columns_to_be_analysed` a list of strings representing the column names
+  for data file and test file to be analysed.<br>
+Sample: `"columns_to_be_analysed": ["age", "workclass", "education",
+                               "educationnum", "maritalstatus", "occupation",
+                               "relationship", "race", "sex", "capitalgain",
+                               "capitalloss", "hoursperweek", "nativecountry",
+                               "class"],`
 
 # Variables restrictions
 Use `main.py -t` to rapidly verify all variables compliance.<br>
@@ -140,17 +148,20 @@ an existing path;
 13) `processing_data_limit` value must be a positive integer;
 14) `unwelcome_chars_and_words` value must be a dictionary of strings keys
    of strings values;
-15) `number_of_threads` value must be neutral or a positive integer.
+15) `number_of_threads` value must be neutral or a positive integer;
+15) `columns_to_be_analysed` value must be a list of strings
+   and its content must exists in `expected_header`.
     
 # Getting started
-1) Install pandas library with `pip install pandas`;<br>
-2) Install sqlalchemy library with `pip install sqlalchemy`;<br>
-3) Access `services.variables.py` to configure the script;<br>
-4) Perform a variables' compliance test with `py.exe main.py --test`;<br>
-5) You can start the script manually with `py.exe main.py --start`;<br>
-6) You can continue from where you left off with `py.exe main.py --proceed`;<br>
-7) You can process only the first rows of data with  `py.exe main.py --start --one-time`;<br>
-8) You can continue from where you left off running only once with `py.exe main.py --proceed --one-time`.<br>
+1) Install pandas library with `pip install pandas`;
+2) Install sqlalchemy library with `pip install sqlalchemy`;
+3) Access `services.variables.py` to configure the script;
+4) Perform a variables' compliance test with `py.exe main.py --test`;
+5) You can start the script manually with `py.exe main.py --start`;
+6) You can continue from where you left off with `py.exe main.py --proceed`;
+7) You can process only the first rows of data with  `py.exe main.py --start --one-time`;
+8) You can continue from where you left off running only once with `py.exe main.py --proceed --one-time`;
+9) Perform a SQLite content analysis with `py.exe main.py --analyse`.
 
 `-t | --test` tests variables and other functions to process data.<br>
 `-s | --start` erases the database and start from scratch. Running
@@ -158,7 +169,8 @@ based on `services.variables.py` until the end of the file or interruption.<br>
 `-p | --proceed` continue where you left off. Running
 based on `services.variables.py` until the end of the file or interruption.<br>
 `-ot | --one-time` run the previously command only one time. <br>
-`main.py <-t | --test | -s | --start | -p | --proceed> [-ot | --one-time]`
+`-a | --analyse` analyses SQLite content. <br>
+`main.py <-t | --test | -s | --start | -p | --proceed | -a | --analyse> [-ot | --one-time]`
 
 
 # More information
