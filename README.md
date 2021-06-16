@@ -1,4 +1,4 @@
-#Desafio - Dev Python
+# Desafio - Dev Python
 A script capable of collecting data from two data files, validating its content
 and writing it into a SQLite database.
 
