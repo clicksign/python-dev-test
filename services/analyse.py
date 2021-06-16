@@ -99,9 +99,10 @@ def _create_two_grouped_bar_graph_in(title: str,
     axis.set_xticks(x)
     axis.set_xticklabels(labels)
     axis.legend()
-    axis.bar_label(bars1, padding=5)
-    axis.bar_label(bars2, padding=5)
+    axis.bar_label(bars1, padding=2)
+    axis.bar_label(bars2, padding=2)
     figure.tight_layout()
+    figure.autofmt_xdate()
     analysis_folder_graph_pdf_path = os.path.join(analysis_folder_path, "graphs", f"{title}.png")
     if VARIABLES["verbosity"]:
         print(f"Creating {analysis_folder_graph_pdf_path}!")
