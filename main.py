@@ -1,3 +1,4 @@
+import datetime
 import os
 import sched
 import sqlite3
@@ -9,6 +10,7 @@ import unittest
 from services.variables import VARIABLES
 from services.sqlite import sqlite_get_dataframe_from, sqlite_table_exists, sqlite_erase_create_or_update_from
 from services.clean import clean_and_validate
+from services.analyse import create_analysis_folder, _create_two_grouped_bar_graph_in
 
 
 def concatenate_outputs() -> pandas.DataFrame:
@@ -149,7 +151,8 @@ def main():
                 scheduler.enter(0, 1, process_data_from, (dataframe, True, scheduler,))
             scheduler.run()
         elif action in ["-a", "--analyse", ]:
-            pass
+            path = create_analysis_folder()
+            _create_two_grouped_bar_graph_in("Teste_X", "Teste_Y", ["A", "B"], [1, 2], [3, 4], "X", "Y", path)
         else:
             raise IndexError
     except IndexError:

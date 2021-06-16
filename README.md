@@ -6,11 +6,13 @@ and writing it into a SQLite database.
 Tested on Python 3.9+<br>
 pandas library<br>
 sqlalchemy library<br>
+matplotlib library<br>
+django library<br>
 
 # Type
 Read and write.
 
-# Variables
+# Variables - Processing
 All variables may found at `services.variables.py VARIABLES`.<br>
 - `data_file_path` a string variable representing
   the data file path related to project folder.<br>
@@ -114,13 +116,30 @@ Sample: `"run_every_seconds": 10`
   to be processed every execution.<br>
 Sample: `"processing_data_limit": 1630`
   
+# Variables - Analysis
+All variables may found at `services.variables.py VARIABLES`.<br>
 - `columns_to_be_analysed` a list of strings representing the column names
   for data file and test file to be analysed.<br>
 Sample: `"columns_to_be_analysed": ["age", "workclass", "education",
-                               "educationnum", "maritalstatus", "occupation",
-                               "relationship", "race", "sex", "capitalgain",
-                               "capitalloss", "hoursperweek", "nativecountry",
-                               "class"],`
+                                    "educationnum", "maritalstatus", "occupation",
+                                    "relationship", "race", "sex", "capitalgain",
+                                    "capitalloss", "hoursperweek", "nativecountry",
+                                    "class"]`
+  
+
+
+- `analysis_relation` a dictionary of strings representing the graph type, 
+  being:
+  - `two_grouped_bar` a two grouped bar graph. Must be a two
+    length dict containing two strings keys representing
+    the column name with a string value representing the
+    row value.<br>
+    Sample: `"analysis_relation": {
+            "two_grouped_bar": {
+                "sex": "Male",
+                "sex": "Female",
+            }
+        }`
 
 # Variables restrictions
 Use `main.py -t` to rapidly verify all variables compliance.<br>
@@ -149,19 +168,26 @@ an existing path;
 14) `unwelcome_chars_and_words` value must be a dictionary of strings keys
    of strings values;
 15) `number_of_threads` value must be neutral or a positive integer;
-15) `columns_to_be_analysed` value must be a list of strings
-   and its content must exists in `expected_header`.
+16) `columns_to_be_analysed` value must be a list of strings
+   and its content must exists in `expected_header`;    
+17) `analysis_relation` value must be a dict of:<br>
+    - `two_grouped_bar` value must be a dict of strings keys 
+    of strings values;
+
     
 # Getting started
 1) Install pandas library with `pip install pandas`;
 2) Install sqlalchemy library with `pip install sqlalchemy`;
-3) Access `services.variables.py` to configure the script;
-4) Perform a variables' compliance test with `py.exe main.py --test`;
-5) You can start the script manually with `py.exe main.py --start`;
-6) You can continue from where you left off with `py.exe main.py --proceed`;
-7) You can process only the first rows of data with  `py.exe main.py --start --one-time`;
-8) You can continue from where you left off running only once with `py.exe main.py --proceed --one-time`;
-9) Perform a SQLite content analysis with `py.exe main.py --analyse`.
+3) Install matplotlib library with `pip install matplotlib`;
+4) Install django library with `pip install django`;
+5) Install pdfkit library with `pip install pdfkit`;
+6) Access `services.variables.py` to configure the script;
+7) Perform a variables' compliance test with `py.exe main.py --test`;
+8) You can start the script manually with `py.exe main.py --start`;
+9) You can continue from where you left off with `py.exe main.py --proceed`;
+10) You can process only the first rows of data with  `py.exe main.py --start --one-time`;
+11) You can continue from where you left off running only once with `py.exe main.py --proceed --one-time`;
+12) Perform a SQLite content analysis with `py.exe main.py --analyse`.
 
 `-t | --test` tests variables and other functions to process data.<br>
 `-s | --start` erases the database and start from scratch. Running
