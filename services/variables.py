@@ -66,6 +66,24 @@ VARIABLES = {
                                "capitalloss", "hoursperweek", "nativecountry",
                                "class"],
     "analysis_relation": [
+        ["pie",
+         [
+             ["sex", "capitalloss"],
+             None,
+         ],
+         ],
+        ["pie",
+         [
+             ["sex", "maritalstatus"],
+             "Male",
+         ],
+         ],
+        ["pie",
+         [
+             ["sex", "maritalstatus"],
+             "Female",
+         ],
+         ],
         ["two_grouped_bar",
          [
              ["sex", "Male"],
@@ -87,5 +105,30 @@ VARIABLES = {
              "education",
          ],
          ],
+        ["two_grouped_bar",
+         [
+             ["sex", "Male"],
+             ["sex", "Female"],
+             "maritalstatus",
+         ],
+         ],
+        ["two_grouped_bar",
+         [
+             ["sex", "Male"],
+             ["sex", "Female"],
+             "occupation",
+         ],
+         ],
+        ["two_grouped_bar",
+         [
+             ["sex", "Male"],
+             ["sex", "Female"],
+             "relationship",
+         ],
+         ],
     ],
 }
+
+"""
+        
+"""

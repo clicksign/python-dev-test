@@ -10,7 +10,7 @@ from .variables import VARIABLES
 from .sqlite import sqlite_table_exists, sqlite_get_dataframe_from
 
 
-def _two_grouped_bar_creator(analysis_relation: list, dataframe: pd.DataFrame, analysis_folder_path: str):
+def _two_grouped_bar_graph_creator(analysis_relation: list, dataframe: pd.DataFrame, analysis_folder_path: str):
     """
     Creates a two grouped bar graph based in {analysis_relation}
     @type analysis_relation: list
@@ -51,7 +51,42 @@ def _two_grouped_bar_creator(analysis_relation: list, dataframe: pd.DataFrame, a
     plt.title(title)
     plt.xlabel(consideration_column)
     plt.ylabel("Count")
-    analysis_folder_graph_pdf_path = os.path.join(analysis_folder_path, "graphs", f"{title}.png")
+    plt.tight_layout()
+    graph_path = os.path.join(analysis_folder_path, f"{title}.png")
+    plt.savefig(graph_path)
+
+
+def _pie_graph_creator(analysis_relation: list, dataframe: pd.DataFrame, analysis_folder_path: str):
+    """
+    Creates a two grouped bar graph based in {analysis_relation}
+    @type analysis_relation: list
+    @type dataframe: pd.Dataframe
+    @type analysis_folder_path: str
+    @param analysis_relation: a list representing the information to convert
+    @param dataframe: a dataframe representing the database
+    @param analysis_folder_path: a string representing the path to graph image
+    """
+    expected_header = VARIABLES["expected_header"]
+    expected_values_and_types = VARIABLES["expected_values_and_types"]
+    column_1 = analysis_relation[0][0]
+    column_2 = analysis_relation[0][1]
+    value_1 = analysis_relation[1]
+    if value_1:
+        title = f"{column_1} and {column_2} by {value_1}"
+    else:
+        title = f"{column_1} and {column_2}"
+    column_2_header_index = expected_header.index(column_2)
+    column_2_type_is_int = expected_values_and_types[column_2_header_index] is int
+    column_2_type_is_list = type(expected_values_and_types[column_2_header_index]) is list
+    if column_2_type_is_int:
+        dataframe.groupby([column_1]).sum().plot(kind="pie", y=column_2)
+    if column_2_type_is_list:
+        value_counts = dataframe.value_counts([column_1, column_2])[value_1].to_frame()
+        value_counts.columns = [f"{column_2} for {value_1}"]
+        value_counts.plot(kind="pie", y=f"{column_2} for {value_1}")
+
+    plt.title(title)
+    analysis_folder_graph_pdf_path = os.path.join(analysis_folder_path, f"{title}.png")
     plt.tight_layout()
     plt.savefig(analysis_folder_graph_pdf_path)
 
@@ -85,8 +120,22 @@ def graph_dispatcher(analysis_folder_path: str) -> bool:
             return False
     for relation in analysis_relation:
         if relation[0] == "two_grouped_bar":
+            analysis_folder_graph_two_grouped_bar_path = os.path.join(analysis_folder_path, "graphs",
+                                                                      "Two Grouped Bar")
+            analysis_folder_graph_two_grouped_bar_exists = os.path.exists(analysis_folder_graph_two_grouped_bar_path)
+            if not analysis_folder_graph_two_grouped_bar_exists:
+                os.mkdir(analysis_folder_graph_two_grouped_bar_path)
             two_grouped_bar_analysis_relation = relation[1]
-            _two_grouped_bar_creator(two_grouped_bar_analysis_relation, dataframe, analysis_folder_path)
+            _two_grouped_bar_graph_creator(two_grouped_bar_analysis_relation,
+                                           dataframe,
+                                           analysis_folder_graph_two_grouped_bar_path)
+        elif relation[0] == "pie":
+            analysis_folder_graph_pie_path = os.path.join(analysis_folder_path, "graphs", "pie")
+            analysis_folder_graph_pie_exists = os.path.exists(analysis_folder_graph_pie_path)
+            if not analysis_folder_graph_pie_exists:
+                os.mkdir(analysis_folder_graph_pie_path)
+            pie_analysis_relation = relation[1]
+            _pie_graph_creator(pie_analysis_relation, dataframe, analysis_folder_graph_pie_path)
     return True
 
 

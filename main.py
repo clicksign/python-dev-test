@@ -9,7 +9,7 @@ import unittest
 from services.variables import VARIABLES
 from services.sqlite import sqlite_get_dataframe_from, sqlite_table_exists, sqlite_erase_create_or_update_from
 from services.clean import clean_and_validate
-from services.analyse import create_analysis_folder, _create_two_grouped_bar_graph_in, graph_dispatcher
+from services.analyse import create_analysis_folder, graph_dispatcher
 
 
 def concatenate_outputs() -> pd.DataFrame:
@@ -48,18 +48,18 @@ def concatenate_files() -> pd.DataFrame:
     data_file_skip_row = VARIABLES["data_file_skip_row"]
     test_file_skip_row = VARIABLES["test_file_skip_row"]
     data_file_dataframe = pd.read_csv(data_file_path,
-                                          skipinitialspace=True,
-                                          sep=',',
-                                          header=None,
-                                          names=names,
-                                          skiprows=data_file_skip_row, )
+                                      skipinitialspace=True,
+                                      sep=',',
+                                      header=None,
+                                      names=names,
+                                      skiprows=data_file_skip_row, )
     data_file_dataframe_size = data_file_dataframe.shape[0]
     test_file_dataframe = pd.read_csv(test_file_path,
-                                          skipinitialspace=True,
-                                          sep=',',
-                                          header=None,
-                                          names=names,
-                                          skiprows=test_file_skip_row, )
+                                      skipinitialspace=True,
+                                      sep=',',
+                                      header=None,
+                                      names=names,
+                                      skiprows=test_file_skip_row, )
     test_file_dataframe.index += data_file_dataframe_size
     dataframe = pd.concat([data_file_dataframe, test_file_dataframe])
     return dataframe
@@ -114,7 +114,7 @@ def process_data_from(dataframe: pd.DataFrame, periodically: bool, scheduler: sc
     else:
         dataframe_sqlite = pd.concat([sqlite_data_dataframe, dataframe_outputs])
     difference_between_dataframes = pd.concat([dataframe_sqlite,
-                                                  sqlite_data_dataframe]).drop_duplicates(keep=False)
+                                               sqlite_data_dataframe]).drop_duplicates(keep=False)
     if not dataframe_sqlite.empty:
         there_is_no_difference_between_dataframes = difference_between_dataframes.empty
         if there_is_no_difference_between_dataframes:

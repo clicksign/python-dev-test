@@ -133,7 +133,9 @@ Sample: `"columns_to_be_analysed": ["age", "workclass", "education",
   - `two_grouped_bar` a two grouped bar graph. Must be a three
     length list containing two lists of strings representing
     the column name, and the row value; and a string
-    representing the consideration column.<br>
+    representing the consideration column. The second
+    value in the lists must exist in the column 
+    represented by the first value.<br>
     Sample: `"analysis_relation": [
                 ["two_grouped_bar",
                     [
@@ -142,6 +144,28 @@ Sample: `"columns_to_be_analysed": ["age", "workclass", "education",
                         "race",
                     ],
                     ],`
+    - `pie` a pie graph. Must be a two length list 
+    containing one list of strings representing
+    the columns names; and None or a string
+    representing the consideration value. If the
+    second value is a string, it must exist 
+    in the column represented by the first value
+    in the list.<br>
+    Sample 01: `"analysis_relation": [
+                ["pie",
+                 [
+                    ["sex", "capitalloss"],
+                    None,
+                 ],
+                 ],`      
+    Sample 02: `"analysis_relation": [
+                ["pie",
+                 [
+                    ["sex", "maritalstatus"],
+                    "Male",
+                 ],
+                 ],`   
+
 
 # Variables restrictions
 Use `main.py -t` to rapidly verify all variables compliance.<br>
@@ -174,7 +198,9 @@ an existing path;
    and its content must exists in `expected_header`;    
 17) `analysis_relation` value must be a list of:<br>
     - `two_grouped_bar` value and a list of two lists of 
-      strings, and a string;
+      strings, and a string;      
+    - `pie` value and a list of one list of 
+      strings, and a string or None;
 
     
 # Getting started

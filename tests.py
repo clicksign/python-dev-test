@@ -173,7 +173,7 @@ class FileTests(unittest.TestCase):
         entry_value_analysis_relation = VARIABLES["analysis_relation"]
         entry_value_expected_header = VARIABLES["expected_header"]
         entry_value_expected_values_and_types = VARIABLES["expected_values_and_types"]
-        expected_values = ["two_grouped_bar"]
+        expected_values = ["two_grouped_bar", "pie"]
         self.assertEqual(type(entry_value_analysis_relation), list)
         for element in entry_value_analysis_relation:
             self.assertEqual(type(element), list)
@@ -199,6 +199,18 @@ class FileTests(unittest.TestCase):
                 self.assertEqual(type(entry_value_expected_values_and_types[inner_element_2_index]), list)
                 self.assertTrue(element[1][0][1] in entry_value_expected_values_and_types[inner_element_0_index])
                 self.assertTrue(element[1][1][1] in entry_value_expected_values_and_types[inner_element_1_index])
+            if element[0] == "pie":
+                self.assertEqual(type(element[1]), list)
+                self.assertEqual(len(element[1]), 2)
+                self.assertEqual(type(element[1][0]), list)
+                self.assertTrue(isinstance(element[1][1], str) or element[1][1] is None)
+                self.assertEqual(type(element[1][0][0]), str)
+                self.assertEqual(type(element[1][0][1]), str)
+                self.assertTrue(element[1][0][0] in entry_value_expected_header)
+                self.assertTrue(element[1][0][1] in entry_value_expected_header)
+                if isinstance(element[1][1], str):
+                    element_index = entry_value_expected_header.index(element[1][0][0])
+                    self.assertTrue(element[1][1] in entry_value_expected_values_and_types[element_index])
 
     def test_threading_with_one_row_one_thread(self):
         """
