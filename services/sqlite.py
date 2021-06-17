@@ -1,20 +1,20 @@
 import sqlite3
-import pandas
+import pandas as pd
 from sqlalchemy import create_engine
 from .variables import VARIABLES
 
 
-def sqlite_get_dataframe_from(connection: sqlite3.Connection, table: str) -> pandas.DataFrame:
+def sqlite_get_dataframe_from(connection: sqlite3.Connection, table: str) -> pd.DataFrame:
     """
     Gets SQLite {table} in {connection}
     @type connection: sqlite3.Connection
     @type table: str
-    @rtype: pandas.Database
+    @rtype: pd.Database
     @param connection: a connection representing the database connection
     @param table: a string representing the table name
     @return: a dataframe representing the table content
     """
-    dataframe = pandas.read_sql_query(f"SELECT * FROM {table}", connection)
+    dataframe = pd.read_sql_query(f"SELECT * FROM {table}", connection)
     return dataframe
 
 
@@ -31,7 +31,7 @@ def sqlite_erase_create_or_update_from(table: str, starting_dataframe=None):
         dataframe = starting_dataframe
     else:
         expected_header = VARIABLES["expected_header"]
-        dataframe = pandas.DataFrame([], columns=expected_header)
+        dataframe = pd.DataFrame([], columns=expected_header)
     engine = create_engine(f"sqlite:///SQLite_ClickSign.db")
     dataframe.to_sql(table, engine, if_exists='replace', index=False)
 
@@ -47,7 +47,7 @@ def sqlite_table_exists(connection: sqlite3.Connection, table: str) -> bool:
     @return: a boolean representing the table existence
     """
     try:
-        pandas.read_sql_query(f"SELECT * FROM {table}", connection)
-    except pandas.io.sql.DatabaseError:
+        pd.read_sql_query(f"SELECT * FROM {table}", connection)
+    except pd.io.sql.DatabaseError:
         return False
     return True

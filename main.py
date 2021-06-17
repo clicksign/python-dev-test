@@ -3,7 +3,7 @@ import sched
 import sqlite3
 import sys
 import time
-import pandas
+import pandas as pd
 import tests
 import unittest
 from services.variables import VARIABLES
@@ -12,31 +12,31 @@ from services.clean import clean_and_validate
 from services.analyse import create_analysis_folder, _create_two_grouped_bar_graph_in, graph_dispatcher
 
 
-def concatenate_outputs() -> pandas.DataFrame:
+def concatenate_outputs() -> pd.DataFrame:
     """
     Concatenates all files in "data/outputs/"
-    @rtype: pandas.DataFrame
+    @rtype: pd.DataFrame
     @return: a dataframe representing the concatenation all files in "data/outputs/"
     """
     outputs_path = os.path.join(os.getcwd(), "data", "outputs")
     outputs_files = os.listdir(outputs_path)
     expected_header = VARIABLES["expected_header"]
-    dataframe = pandas.DataFrame([], columns=expected_header)
+    dataframe = pd.DataFrame([], columns=expected_header)
     dataframes = []
     outputs_files_exists = len(outputs_files) > 0
     if outputs_files_exists:
         for outputs_file in outputs_files:
             outputs_file_path = os.path.join(outputs_path, outputs_file)
-            outputs_dataframe = pandas.read_csv(outputs_file_path)
+            outputs_dataframe = pd.read_csv(outputs_file_path)
             dataframes.append(outputs_dataframe)
-        return pandas.concat(dataframes)
+        return pd.concat(dataframes)
     return dataframe
 
 
-def concatenate_files() -> pandas.DataFrame:
+def concatenate_files() -> pd.DataFrame:
     """
     Concatenates data_file_path and test_file_path
-    @rtype: pandas.DataFrame
+    @rtype: pd.DataFrame
     @return: a dataframe representing the concatenation of data_file_path
     and test_file_path
     """
@@ -47,25 +47,25 @@ def concatenate_files() -> pandas.DataFrame:
     names = VARIABLES["expected_header"]
     data_file_skip_row = VARIABLES["data_file_skip_row"]
     test_file_skip_row = VARIABLES["test_file_skip_row"]
-    data_file_dataframe = pandas.read_csv(data_file_path,
+    data_file_dataframe = pd.read_csv(data_file_path,
                                           skipinitialspace=True,
                                           sep=',',
                                           header=None,
                                           names=names,
                                           skiprows=data_file_skip_row, )
     data_file_dataframe_size = data_file_dataframe.shape[0]
-    test_file_dataframe = pandas.read_csv(test_file_path,
+    test_file_dataframe = pd.read_csv(test_file_path,
                                           skipinitialspace=True,
                                           sep=',',
                                           header=None,
                                           names=names,
                                           skiprows=test_file_skip_row, )
     test_file_dataframe.index += data_file_dataframe_size
-    dataframe = pandas.concat([data_file_dataframe, test_file_dataframe])
+    dataframe = pd.concat([data_file_dataframe, test_file_dataframe])
     return dataframe
 
 
-def process_data_from(dataframe: pandas.DataFrame, periodically: bool, scheduler: sched.scheduler):
+def process_data_from(dataframe: pd.DataFrame, periodically: bool, scheduler: sched.scheduler):
     """
     Collects data from SQLite database, determines the amount of data that will be processed based
     on {dataframe}, processed rows gathered from config table and processing data limit.
@@ -77,7 +77,7 @@ def process_data_from(dataframe: pandas.DataFrame, periodically: bool, scheduler
     any modification regarding data table. If presents, updates SQLite database and update table
     config processed rows.
     If {periodically}, reschedule this function.
-    @type dataframe: pandas.Dataframe
+    @type dataframe: pd.Dataframe
     @type periodically: bool
     @type scheduler: sched.scheduler
     @param dataframe: a dataframe representing the data
@@ -93,7 +93,7 @@ def process_data_from(dataframe: pandas.DataFrame, periodically: bool, scheduler
         if not data_table_exists:
             sqlite_erase_create_or_update_from("data")
         if not config_table_exists:
-            config_dataframe = pandas.DataFrame([0], columns=["processed rows"])
+            config_dataframe = pd.DataFrame([0], columns=["processed rows"])
             sqlite_erase_create_or_update_from("config", config_dataframe)
         sqlite_data_dataframe = sqlite_get_dataframe_from(connection, "data")
         sqlite_config_dataframe = sqlite_get_dataframe_from(connection, "config")
@@ -112,15 +112,15 @@ def process_data_from(dataframe: pandas.DataFrame, periodically: bool, scheduler
     if sqlite_data_dataframe.empty:
         dataframe_sqlite = dataframe_outputs
     else:
-        dataframe_sqlite = pandas.concat([sqlite_data_dataframe, dataframe_outputs])
-    difference_between_dataframes = pandas.concat([dataframe_sqlite,
+        dataframe_sqlite = pd.concat([sqlite_data_dataframe, dataframe_outputs])
+    difference_between_dataframes = pd.concat([dataframe_sqlite,
                                                   sqlite_data_dataframe]).drop_duplicates(keep=False)
     if not dataframe_sqlite.empty:
         there_is_no_difference_between_dataframes = difference_between_dataframes.empty
         if there_is_no_difference_between_dataframes:
             return
         sqlite_erase_create_or_update_from("data", dataframe_sqlite)
-    config_dataframe = pandas.DataFrame([future_processed_data], columns=["processed rows"])
+    config_dataframe = pd.DataFrame([future_processed_data], columns=["processed rows"])
     sqlite_erase_create_or_update_from("config", config_dataframe)
     if periodically:
         if run_every_seconds:
@@ -145,7 +145,7 @@ def main():
             scheduler = sched.scheduler(time.time, time.sleep)
             if action in ["-s", "--start", ]:
                 sqlite_erase_create_or_update_from("data")
-                config_dataframe = pandas.DataFrame([0], columns=["processed rows"])
+                config_dataframe = pd.DataFrame([0], columns=["processed rows"])
                 sqlite_erase_create_or_update_from("config", config_dataframe)
             if additional_action in ["-ot", "--one-time", ]:
                 scheduler.enter(0, 1, process_data_from, (dataframe, False, scheduler,))

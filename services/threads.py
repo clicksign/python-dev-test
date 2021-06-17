@@ -1,11 +1,11 @@
-import pandas
+import pandas as pd
 from typing import Callable
 
 
-def create_dataframe_thread(dataframe: pandas.DataFrame, number_of_threads: int) -> list:
+def create_dataframe_thread(dataframe: pd.DataFrame, number_of_threads: int) -> list:
     """
     Splits the {dataframe} in dictionaries of rows based on records
-    @type dataframe: pandas.Dataframe
+    @type dataframe: pd.Dataframe
     @type number_of_threads: int
     @rtype: list
     @param dataframe: a dataframe representing the dataframe to be split

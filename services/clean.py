@@ -2,7 +2,7 @@ import os
 import shutil
 import threading
 import time
-import pandas
+import pandas as pd
 from numpy.random import randint
 from .standalone_tests import StandaloneTests
 from .variables import VARIABLES
@@ -36,7 +36,7 @@ def _clean_outputs_folder() -> bool:
     return True
 
 
-def _create_csv(dataframe: pandas.DataFrame):
+def _create_csv(dataframe: pd.DataFrame):
     """
     Creates a csv file using {dataframe} in data/outputs
     @param dataframe: a dataframe representing the file to be created
@@ -72,7 +72,7 @@ def _clean_and_validate(dataframe_list: list):
     expected_header = VARIABLES["expected_header"]
     unwelcome_chars_and_words = VARIABLES["unwelcome_chars_and_words"]
     wrong_elements = VARIABLES["known_wrong_elements"]
-    dataframe = pandas.DataFrame.from_records(dataframe_list)
+    dataframe = pd.DataFrame.from_records(dataframe_list)
     dataframe = dataframe.astype(str)
     if VARIABLES["verbosity"]:
         print(f"Validating a list of records!")
@@ -102,7 +102,7 @@ def _clean_and_validate(dataframe_list: list):
     _create_csv(dataframe)
 
 
-def clean_and_validate(dataframe: pandas.DataFrame):
+def clean_and_validate(dataframe: pd.DataFrame):
     """
     Deletes all files in "data/outputs/" (_clean_outputs_folder),
     converts all fields on {dataframe} to string, then drops lines

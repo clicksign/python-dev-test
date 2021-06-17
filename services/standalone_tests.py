@@ -1,6 +1,6 @@
 import os
 import unittest
-import pandas
+import pandas as pd
 from .variables import VARIABLES
 
 
@@ -22,23 +22,23 @@ class StandaloneTests:
     def _is_able_to_parse() -> bool:
         """
         Verifies if data_file_path and test_file_path are able to parse through
-        pandas.read_csv
+        pd.read_csv
         @rtype: bool
         @return: a boolean representing parse viability
         """
         data_file_path = VARIABLES["data_file_path"]
         test_file_path = VARIABLES["test_file_path"]
         try:
-            pandas.read_csv(data_file_path,
-                            sep=',',
-                            header=None,
-                            skiprows=VARIABLES["data_file_skip_row"], )
-            pandas.read_csv(test_file_path,
-                            sep=',',
-                            header=None,
-                            skiprows=VARIABLES["test_file_skip_row"], )
+            pd.read_csv(data_file_path,
+                        sep=',',
+                        header=None,
+                        skiprows=VARIABLES["data_file_skip_row"], )
+            pd.read_csv(test_file_path,
+                        sep=',',
+                        header=None,
+                        skiprows=VARIABLES["test_file_skip_row"], )
             return True
-        except pandas.errors.ParserError:
+        except pd.errors.ParserError:
             return False
 
     @staticmethod
@@ -55,14 +55,14 @@ class StandaloneTests:
         """
         data_file_path = VARIABLES["data_file_path"]
         test_file_path = VARIABLES["test_file_path"]
-        data_file_dataframe = pandas.read_csv(data_file_path,
-                                              sep=',',
-                                              header=None,
-                                              skiprows=VARIABLES["data_file_skip_row"], )
-        test_file_dataframe = pandas.read_csv(test_file_path,
-                                              sep=',',
-                                              header=None,
-                                              skiprows=VARIABLES["test_file_skip_row"], )
+        data_file_dataframe = pd.read_csv(data_file_path,
+                                          sep=',',
+                                          header=None,
+                                          skiprows=VARIABLES["data_file_skip_row"], )
+        test_file_dataframe = pd.read_csv(test_file_path,
+                                          sep=',',
+                                          header=None,
+                                          skiprows=VARIABLES["test_file_skip_row"], )
         data_n_of_columns = len(data_file_dataframe.columns)
         test_n_of_columns = len(test_file_dataframe.columns)
         return data_n_of_columns == expected_number_of_columns and test_n_of_columns == expected_number_of_columns

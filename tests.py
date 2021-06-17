@@ -1,6 +1,6 @@
 import os
 import unittest
-import pandas
+import pandas as pd
 from services.variables import VARIABLES
 from services.standalone_tests import StandaloneTests
 from services.threads import create_dataframe_thread
@@ -204,7 +204,7 @@ class FileTests(unittest.TestCase):
         """
         Tests if dataframe with size of 1 with 1 thread returns 1 thread size
         """
-        entry_value_dataframe = pandas.DataFrame(data={'col1': [1], 'col2': [2]})
+        entry_value_dataframe = pd.DataFrame(data={'col1': [1], 'col2': [2]})
         entry_value_number_of_threads = 1
         expected_value = 1
         self.assertEqual(len(create_dataframe_thread(entry_value_dataframe,
@@ -216,7 +216,7 @@ class FileTests(unittest.TestCase):
         """
         Tests if dataframe with size of 1 with 2 threads returns 1 thread size
         """
-        entry_value_dataframe = pandas.DataFrame(data={'col1': [1], 'col2': [2]})
+        entry_value_dataframe = pd.DataFrame(data={'col1': [1], 'col2': [2]})
         entry_value_number_of_threads = 2
         expected_value = 1
         self.assertEqual(len(create_dataframe_thread(entry_value_dataframe,
@@ -227,7 +227,7 @@ class FileTests(unittest.TestCase):
         """
         Tests if dataframe with size of 2 with 1 thread returns 1 thread size
         """
-        entry_value_dataframe = pandas.DataFrame(data={'col1': [1, 2], 'col2': [3, 4]})
+        entry_value_dataframe = pd.DataFrame(data={'col1': [1, 2], 'col2': [3, 4]})
         entry_value_number_of_threads = 1
         expected_value = 1
         self.assertEqual(len(create_dataframe_thread(entry_value_dataframe,
@@ -238,7 +238,7 @@ class FileTests(unittest.TestCase):
         """
         Tests if dataframe with size of 3 with 2 threads returns 3 thread size
         """
-        entry_value_dataframe = pandas.DataFrame(data={'col1': [1, 2, 3], 'col2': [4, 5, 6]})
+        entry_value_dataframe = pd.DataFrame(data={'col1': [1, 2, 3], 'col2': [4, 5, 6]})
         entry_value_number_of_threads = 2
         expected_value = 3
         self.assertEqual(len(create_dataframe_thread(entry_value_dataframe,
@@ -249,7 +249,7 @@ class FileTests(unittest.TestCase):
         """
         Tests if dataframe with size of 5 with 3 threads returns 3 thread size
         """
-        entry_value_dataframe = pandas.DataFrame(data={'col1': [1, 2, 3, 4, 5], 'col2': [6, 7, 8, 9, 10]})
+        entry_value_dataframe = pd.DataFrame(data={'col1': [1, 2, 3, 4, 5], 'col2': [6, 7, 8, 9, 10]})
         entry_value_number_of_threads = 3
         expected_value = 3
         self.assertEqual(len(create_dataframe_thread(entry_value_dataframe,
