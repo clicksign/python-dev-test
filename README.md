@@ -208,21 +208,22 @@ version: 1.0.0
 
 # Utilities
 Threads in this script are useful only on 100.000+ rows process.<br>
+edit. Elapsed time (s): value before enhancement -> value after enhancement
 
 | Number of threads | Rows processed | Elapsed time (s) |
 |:-----------------:|:--------------:|:----------------:|
-|         1         |      1000      |       3.5        |
-|         10        |      1000      |       7.7        |
-|         15        |      1000      |       11.7       |
-|         1         |      10000     |       12.5       |
-|         10        |      10000     |       13.2       |
-|         15        |      10000     |       13.0       |
-|         1         |      50000     |       49.0       |
-|         10        |      50000     |       52.0       |
-|         15        |      50000     |       52.4       |
-|         1         |      100000    |       103.6      |
-|         10        |      100000    |       101.8      |
-|         15        |      100000    |       103.8      |
+|         1         |      1000      |    3.5 -> 2.8    |
+|         10        |      1000      |    7.7 -> 3.0    |
+|         15        |      1000      |   11.7 -> 2.9    |
+|         1         |      10000     |   12.5 -> 11.0   |
+|         10        |      10000     |   13.2 -> 11.6   |
+|         15        |      10000     |   13.0 -> 11.9   |
+|         1         |      50000     |   49.0 -> 48.5   |
+|         10        |      50000     |   52.0 -> 50.5   |
+|         15        |      50000     |   52.4 -> 49.9   |
+|         1         |      100000    |  103.6 -> 97.4   |
+|         10        |      100000    |  101.8 -> 98.9  |
+|         15        |      100000    |  103.8 -> 99.7   |
 
 ---
 # Descrição da prova
@@ -233,7 +234,7 @@ Este repositório possui um teste que visa avaliar sua curiosidade, seus conheci
 
 Sua tarefa é criar um processo ETL/ELT com agendamento que transporte dados úteis, presentes nos datasets fornecidos, para um banco de dados relacional. Os critérios para a execução deste desafio são:
 
-1. Suas **únicas e excluisivas** fonte de dados devem ser os datasets fornecidos neste repositório;
+1. Suas **únicas e exclusivas** fontes de dados devem ser os datasets fornecidos neste repositório;
 2. Você deve processar **todos** os arquivos de dados fornecidos;
 3. Seu script deve ser agendado para rodar a cada **10 segundos** processando **1.630 registros**;
 4. Aplique todas as transformações e limpeza de dados que julgar necessária (*Tenha em mente que precisamos acessar dados úteis que possibilitem a extração de insights!*);

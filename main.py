@@ -1,4 +1,3 @@
-import datetime
 import os
 import sched
 import sqlite3
@@ -45,19 +44,22 @@ def concatenate_files() -> pandas.DataFrame:
         print(f"Concatenating files!")
     data_file_path = VARIABLES["data_file_path"]
     test_file_path = VARIABLES["test_file_path"]
+    names = VARIABLES["expected_header"]
+    data_file_skip_row = VARIABLES["data_file_skip_row"]
+    test_file_skip_row = VARIABLES["test_file_skip_row"]
     data_file_dataframe = pandas.read_csv(data_file_path,
                                           skipinitialspace=True,
                                           sep=',',
                                           header=None,
-                                          names=VARIABLES["expected_header"],
-                                          skiprows=VARIABLES["data_file_skip_row"], )
+                                          names=names,
+                                          skiprows=data_file_skip_row, )
     data_file_dataframe_size = data_file_dataframe.shape[0]
     test_file_dataframe = pandas.read_csv(test_file_path,
                                           skipinitialspace=True,
                                           sep=',',
                                           header=None,
-                                          names=VARIABLES["expected_header"],
-                                          skiprows=VARIABLES["test_file_skip_row"], )
+                                          names=names,
+                                          skiprows=test_file_skip_row, )
     test_file_dataframe.index += data_file_dataframe_size
     dataframe = pandas.concat([data_file_dataframe, test_file_dataframe])
     return dataframe
@@ -82,29 +84,30 @@ def process_data_from(dataframe: pandas.DataFrame, periodically: bool, scheduler
     @param periodically:
     @param scheduler:
     """
+    processing_data_limit = VARIABLES["processing_data_limit"]
+    run_every_seconds = VARIABLES["run_every_seconds"]
+    dataframe_size = dataframe.shape[0]
     with sqlite3.connect("SQLite_ClickSign.db") as connection:
         data_table_exists = sqlite_table_exists(connection, "data")
+        config_table_exists = sqlite_table_exists(connection, "config")
         if not data_table_exists:
             sqlite_erase_create_or_update_from("data")
-        config_table_exists = sqlite_table_exists(connection, "config")
         if not config_table_exists:
             config_dataframe = pandas.DataFrame([0], columns=["processed rows"])
             sqlite_erase_create_or_update_from("config", config_dataframe)
         sqlite_data_dataframe = sqlite_get_dataframe_from(connection, "data")
         sqlite_config_dataframe = sqlite_get_dataframe_from(connection, "config")
-    processed_data = sqlite_config_dataframe.loc[0]["processed rows"]
-    dataframe_size = dataframe.shape[0]
-    processing_data_limit = VARIABLES["processing_data_limit"]
-    future_processed_data = processed_data + processing_data_limit
+    processed_rows = sqlite_config_dataframe.loc[0]["processed rows"]
+    future_processed_data = processed_rows + processing_data_limit
     is_close_to_finish = future_processed_data >= dataframe_size
     if is_close_to_finish:
-        dataframe_partial = dataframe[processed_data:]
+        dataframe_partial = dataframe[processed_rows:]
         periodically = False
     else:
-        dataframe_partial = dataframe[processed_data:future_processed_data]
+        dataframe_partial = dataframe[processed_rows:future_processed_data]
+    print(f"Processing {dataframe_partial.shape[0]} rows!")
     clean_and_validate(dataframe_partial)
     dataframe_outputs = concatenate_outputs()
-    print(f"Processing {dataframe_partial.shape[0]} rows!")
     print(f"{dataframe_outputs.shape[0]} are compliance!")
     if sqlite_data_dataframe.empty:
         dataframe_sqlite = dataframe_outputs
@@ -120,7 +123,6 @@ def process_data_from(dataframe: pandas.DataFrame, periodically: bool, scheduler
     config_dataframe = pandas.DataFrame([future_processed_data], columns=["processed rows"])
     sqlite_erase_create_or_update_from("config", config_dataframe)
     if periodically:
-        run_every_seconds = VARIABLES["run_every_seconds"]
         if run_every_seconds:
             print(f"Waiting {run_every_seconds} seconds...")
             print("")
@@ -128,34 +130,33 @@ def process_data_from(dataframe: pandas.DataFrame, periodically: bool, scheduler
 
 
 def main():
-    #try:
-    action = sys.argv[1]
     try:
-        additional_action = sys.argv[2]
-    except IndexError:
-        additional_action = None
-    print("Data processing started. Use CTRL^C to stop!")
-    if action in ["-t", "--test", ]:
-        principal_suite = unittest.TestLoader().loadTestsFromModule(tests)
-        unittest.TextTestRunner(verbosity=2).run(principal_suite)
-    elif action in ["-s", "--start", "-p", "--proceed", ]:
-        if action in ["-s", "--start", ]:
-            sqlite_erase_create_or_update_from("data")
-            config_dataframe = pandas.DataFrame([0], columns=["processed rows"])
-            sqlite_erase_create_or_update_from("config", config_dataframe)
-        dataframe = concatenate_files()
-        scheduler = sched.scheduler(time.time, time.sleep)
-        if additional_action in ["-ot", "--one-time", ]:
-            scheduler.enter(0, 1, process_data_from, (dataframe, False, scheduler,))
+        action = sys.argv[1]
+        try:
+            additional_action = sys.argv[2]
+        except IndexError:
+            additional_action = None
+        print("Data processing started. Use CTRL^C to stop!")
+        if action in ["-t", "--test", ]:
+            principal_suite = unittest.TestLoader().loadTestsFromModule(tests)
+            unittest.TextTestRunner(verbosity=2).run(principal_suite)
+        elif action in ["-s", "--start", "-p", "--proceed", ]:
+            dataframe = concatenate_files()
+            scheduler = sched.scheduler(time.time, time.sleep)
+            if action in ["-s", "--start", ]:
+                sqlite_erase_create_or_update_from("data")
+                config_dataframe = pandas.DataFrame([0], columns=["processed rows"])
+                sqlite_erase_create_or_update_from("config", config_dataframe)
+            if additional_action in ["-ot", "--one-time", ]:
+                scheduler.enter(0, 1, process_data_from, (dataframe, False, scheduler,))
+            else:
+                scheduler.enter(0, 1, process_data_from, (dataframe, True, scheduler,))
+            scheduler.run()
+        elif action in ["-a", "--analyse", ]:
+            analysis_folder_path = create_analysis_folder()
+            graph_dispatcher(analysis_folder_path)
         else:
-            scheduler.enter(0, 1, process_data_from, (dataframe, True, scheduler,))
-        scheduler.run()
-    elif action in ["-a", "--analyse", ]:
-        analysis_folder_path = create_analysis_folder()
-        graph_dispatcher(analysis_folder_path)
-    else:
-        raise IndexError
-        """
+            raise IndexError
     except IndexError:
         print("SyntaxError: This is NOT a valid syntax.")
         print("Please use the following:")
@@ -168,7 +169,7 @@ def main():
     except KeyboardInterrupt:
         print("Data processing stopped with CTRL^C.")
         print("Use <-p | --proceed> to continue where you left off!")
-"""
+
 
 if __name__ == '__main__':
     main()

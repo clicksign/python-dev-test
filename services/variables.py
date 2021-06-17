@@ -46,7 +46,7 @@ VARIABLES = {
         14: [">50K.", "<=50K.", ">50K", "<=50K"],
     },
     "known_wrong_elements": ["?"],
-    "drop_duplicated": False,
+    "drop_duplicated": True,
     "unwelcome_chars_and_words": {
         # "-": " ",
         # "&": " ",
