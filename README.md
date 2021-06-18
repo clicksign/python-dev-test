@@ -144,27 +144,28 @@ Sample: `"columns_to_be_analysed": ["age", "workclass", "education",
                         "race",
                     ],
                     ],`
-    - `pie` a pie graph. Must be a two length list 
-    containing one list of strings representing
-    the columns names; and None or a string
-    representing the consideration value. If the
-    second value is a string, it must exist 
-    in the column represented by the first value
-    in the list.<br>
-    Sample 01: `"analysis_relation": [
-                ["pie",
-                 [
-                    ["sex", "capitalloss"],
-                    None,
-                 ],
-                 ],`      
-    Sample 02: `"analysis_relation": [
-                ["pie",
-                 [
-                    ["sex", "maritalstatus"],
-                    "Male",
-                 ],
-                 ],`   
+                    
+  - `pie` a pie graph. Must be a two length list 
+  containing one list of strings representing
+  the columns names; and None or a string
+  representing the consideration value. If the
+  second value is a string, it must exist 
+  in the column represented by the first value
+  in the list.<br>
+  Sample 01: `"analysis_relation": [
+              ["pie",
+               [
+                  ["sex", "capitalloss"],
+                  None,
+               ],
+               ],`      
+  Sample 02: `"analysis_relation": [
+              ["pie",
+               [
+                  ["sex", "maritalstatus"],
+                  "Male",
+               ],
+               ],`   
 
 
 # Variables restrictions
