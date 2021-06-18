@@ -1,0 +1,22 @@
+@charset "utf-8";
+/* CSS Document */
+
+* {
+	margin: max(0.5vw, 4px);
+	padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.row {
+	display:grid;
+	grid-template-columns: 50% 50%;
+}
+
+img {
+	height: 100%;
+    width: 100%;
+    object-fit: cover;
+}

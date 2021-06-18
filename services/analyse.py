@@ -1,11 +1,10 @@
 import os
 import datetime
+import shutil
 import sqlite3
 import matplotlib.pyplot as plt
 import pandas as pd
-from django.template.loader import get_template
-from django.template import Context
-import pdfkit
+import jinja2
 from .variables import VARIABLES
 from .sqlite import sqlite_table_exists, sqlite_get_dataframe_from
 
@@ -52,7 +51,7 @@ def _two_grouped_bar_graph_creator(analysis_relation: list, dataframe: pd.DataFr
     plt.xlabel(consideration_column)
     plt.ylabel("Count")
     plt.tight_layout()
-    graph_path = os.path.join(analysis_folder_path, f"{title}.png")
+    graph_path = os.path.join(analysis_folder_path, f"{title.replace(' ', '_')}.png")
     plt.savefig(graph_path)
 
 
@@ -86,22 +85,27 @@ def _pie_graph_creator(analysis_relation: list, dataframe: pd.DataFrame, analysi
         value_counts.plot(kind="pie", y=f"{column_2} for {value_1}")
 
     plt.title(title)
-    analysis_folder_graph_pdf_path = os.path.join(analysis_folder_path, f"{title}.png")
+    analysis_folder_graph_html_path = os.path.join(analysis_folder_path, f"{title.replace(' ', '_')}.png")
     plt.tight_layout()
-    plt.savefig(analysis_folder_graph_pdf_path)
+    plt.savefig(analysis_folder_graph_html_path)
 
 
-def create_pdf_from_to(context: Context, analysis_pdf_folder_path: str):
+def create_html_from_to(context: dict, analysis_folder_path: str):
     """
-    Renders data and template.html based on {context} and creates it in {analysis_pdf_folder_path}
+    Renders data and template.html based on {context} and creates it in {analysis_html_folder_path}
     @type context: str
-    @type analysis_pdf_folder_path: Context
-    @param context: a context representing the data to be rendered with template.html
-    @param analysis_pdf_folder_path: a string representing the path to rendered template.html
+    @type analysis_folder_path: dict
+    @param context: a dictionary representing the data to be rendered with template.html
+    @param analysis_folder_path: a string representing the path to rendered template.html
     """
-    template = get_template("template.html")
-    rendered_template = template.render(context)
-    pdfkit.from_string(rendered_template, analysis_pdf_folder_path)
+    env = jinja2.Environment(loader=jinja2.FileSystemLoader('services/templates'))
+    template = env.get_template("template.html")
+    output = template.render(context)
+    analysis_html_path = os.path.join(analysis_folder_path, "view.html")
+    analysis_css_path = os.path.join(analysis_folder_path, "style.css")
+    with open(analysis_html_path, "w") as temp:
+        temp.write(output)
+    shutil.copyfile(r"services\templates\style.css", analysis_css_path)
 
 
 def graph_dispatcher(analysis_folder_path: str) -> bool:

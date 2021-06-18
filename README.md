@@ -7,7 +7,8 @@ Tested on Python 3.9+<br>
 pandas library<br>
 sqlalchemy library<br>
 matplotlib library<br>
-django library<br>
+jinja2 library<br>
+pdfkit library<br>
 
 # Type
 Read and write.
@@ -207,7 +208,7 @@ an existing path;
 1) Install pandas library with `pip install pandas`;
 2) Install sqlalchemy library with `pip install sqlalchemy`;
 3) Install matplotlib library with `pip install matplotlib`;
-4) Install django library with `pip install django`;
+4) Install jinja2 library with `pip install jinja2`;
 5) Install pdfkit library with `pip install pdfkit`;
 6) Access `services.variables.py` to configure the script;
 7) Perform a variables' compliance test with `py.exe main.py --test`;

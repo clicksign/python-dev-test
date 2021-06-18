@@ -9,7 +9,7 @@ import unittest
 from services.variables import VARIABLES
 from services.sqlite import sqlite_get_dataframe_from, sqlite_table_exists, sqlite_erase_create_or_update_from
 from services.clean import clean_and_validate
-from services.analyse import create_analysis_folder, graph_dispatcher
+from services.analyse import create_analysis_folder, graph_dispatcher, create_html_from_to
 
 
 def concatenate_outputs() -> pd.DataFrame:
@@ -153,8 +153,28 @@ def main():
                 scheduler.enter(0, 1, process_data_from, (dataframe, True, scheduler,))
             scheduler.run()
         elif action in ["-a", "--analyse", ]:
+            context = {"graph_images": {}}
             analysis_folder_path = create_analysis_folder()
+            analysis_folder_graph_path = os.path.join(analysis_folder_path, "graphs")
             graph_dispatcher(analysis_folder_path)
+            graphs_type_dirs = os.listdir(analysis_folder_graph_path)
+            graphs_dict = {}
+            for graphs_type_dir in graphs_type_dirs:
+                graphs_dirs = os.path.join(analysis_folder_graph_path, graphs_type_dir)
+                graphs = os.listdir(graphs_dirs)
+                for graph in graphs:
+                    graph_path = os.path.join(graphs_dirs, graph)
+                    graph_path_start = graph_path.rfind("\\graphs") + 1
+                    graph_path = graph_path[graph_path_start:]
+                    print(graph_path)
+                    graphs_dict[graph] = graph_path
+            title_start = analysis_folder_path.rfind("\\") + 1
+            context["title"] = analysis_folder_path[title_start:]
+            context["images_list"] = list(graphs_dict)
+            context["images_path_list"] = list(graphs_dict.values())
+            context["number_of_graphs"] = len(graphs_dict)
+            context["rest"] = len(graphs_dict) % 2
+            create_html_from_to(context, analysis_folder_path)
         else:
             raise IndexError
     except IndexError:
