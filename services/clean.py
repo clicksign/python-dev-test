@@ -38,7 +38,7 @@ def _clean_outputs_folder() -> bool:
 
 def _create_csv(dataframe: pd.DataFrame):
     """
-    Creates a csv file using {dataframe} in data/outputs
+    Creates a csv file using {dataframe} in "data/outputs/"
     @param dataframe: a dataframe representing the file to be created
     """
     outputs_path = os.path.join(os.getcwd(), "data", "outputs")
@@ -63,7 +63,7 @@ def _clean_and_validate(dataframe_list: list):
     it finds known wrong elements listed on known_wrong_elements and lines where
     test_non_expected_types and/or test_non_expected_values is False.
     Then replaces all unwelcome chars and/or words on its values.
-    Finally creates a csv in data/outputs (_create_csv)
+    Finally creates a csv in "data/outputs/" (_create_csv)
     @type dataframe_list: list
     @param dataframe_list: a list of dictionaries representing the rows to be cleaned
     and transformed into output.csv
@@ -111,7 +111,7 @@ def clean_and_validate(dataframe: pd.DataFrame):
     (_clean_and_validate). Then converts all fields on {dataframe} to string,
     drops lines where test_non_expected_types and/or test_non_expected_values is False.
     Then replaces all unwelcome chars and/or words on its values.
-    Finally creates a csv on data/outputs for every thread.
+    Finally creates a csv in "data/outputs/" for every thread.
     """
     number_of_threads = VARIABLES["number_of_threads"]
     drop_duplicated = VARIABLES["drop_duplicated"]
