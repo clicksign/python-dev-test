@@ -229,9 +229,7 @@ based on `services.variables.py` until the end of the file or interruption.<br>
 `-a | --analyse` analyses SQLite content and create an HTML view. <br>
 `main.py <-t | --test | -s | --start | -p | --proceed | -a | --analyse> [-ot | --one-time]`
 
-<figure class="video_container">
-  <iframe src="https://www.youtube.com/embed/JXWP6W3mXXM" frameborder="0" allowfullscreen="true"> </iframe>
-</figure>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/JXWP6W3mXXM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 # More information
 Author(s): Bruno Lançoni<br>
