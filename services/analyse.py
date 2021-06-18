@@ -83,7 +83,6 @@ def _pie_graph_creator(analysis_relation: list, dataframe: pd.DataFrame, analysi
         value_counts = dataframe.value_counts([column_1, column_2])[value_1].to_frame()
         value_counts.columns = [f"{column_2} for {value_1}"]
         value_counts.plot(kind="pie", y=f"{column_2} for {value_1}")
-
     plt.title(title)
     analysis_folder_graph_html_path = os.path.join(analysis_folder_path, f"{title.replace(' ', '_')}.png")
     plt.tight_layout()

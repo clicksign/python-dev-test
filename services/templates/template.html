@@ -22,5 +22,16 @@
 				</div>
 			</div>
 		{% endfor %}
+		{% if rest %}
+			<div class="row">
+				<div class="column">
+					<center>
+						<img src="{{ images_path_list[-1] }}" alt="{{ images_list[-1] }}">
+					</center>
+				</div>
+			</div>
+			<div>
+			</div>
+		{% endif %}
 	</body>
 </html>

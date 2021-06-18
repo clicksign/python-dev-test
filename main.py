@@ -166,7 +166,6 @@ def main():
                     graph_path = os.path.join(graphs_dirs, graph)
                     graph_path_start = graph_path.rfind("\\graphs") + 1
                     graph_path = graph_path[graph_path_start:]
-                    print(graph_path)
                     graphs_dict[graph] = graph_path
             title_start = analysis_folder_path.rfind("\\") + 1
             context["title"] = analysis_folder_path[title_start:]
@@ -184,7 +183,7 @@ def main():
         print("-s  | --start      Start from scratch")
         print("-p  | --proceed    Continue where you left off")
         print("-ot | --one-time   Run just once")
-        print("-a  | --analyse    Perform a SQLite content analysis")
+        print("-a  | --analyse    Perform a SQLite content analysis and create HTML content")
         print("main.py <-t | --test | -s | --start | -p | --proceed | -a  | --analyse> [-ot | --one-time]")
     except KeyboardInterrupt:
         print("Data processing stopped with CTRL^C.")

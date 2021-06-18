@@ -8,7 +8,6 @@ pandas library<br>
 sqlalchemy library<br>
 matplotlib library<br>
 jinja2 library<br>
-pdfkit library<br>
 
 # Type
 Read and write.
@@ -202,21 +201,19 @@ an existing path;
       strings, and a string;      
     - `pie` value and a list of one list of 
       strings, and a string or None;
-
     
 # Getting started
 1) Install pandas library with `pip install pandas`;
 2) Install sqlalchemy library with `pip install sqlalchemy`;
 3) Install matplotlib library with `pip install matplotlib`;
 4) Install jinja2 library with `pip install jinja2`;
-5) Install pdfkit library with `pip install pdfkit`;
-6) Access `services.variables.py` to configure the script;
-7) Perform a variables' compliance test with `py.exe main.py --test`;
-8) You can start the script manually with `py.exe main.py --start`;
-9) You can continue from where you left off with `py.exe main.py --proceed`;
-10) You can process only the first rows of data with  `py.exe main.py --start --one-time`;
-11) You can continue from where you left off running only once with `py.exe main.py --proceed --one-time`;
-12) Perform a SQLite content analysis with `py.exe main.py --analyse`.
+5) Access `services.variables.py` to configure the script;
+6) Perform a variables' compliance test with `py.exe main.py --test`;
+7) You can start the script manually with `py.exe main.py --start`;
+8) You can continue from where you left off with `py.exe main.py --proceed`;
+9) You can process only the first rows of data with  `py.exe main.py --start --one-time`;
+10) You can continue from where you left off running only once with `py.exe main.py --proceed --one-time`;
+11) Perform a SQLite content analysis and HTML view creation with `py.exe main.py --analyse`.
 
 `-t | --test` tests variables and other functions to process data.<br>
 `-s | --start` erases the database and start from scratch. Running
@@ -224,9 +221,8 @@ based on `services.variables.py` until the end of the file or interruption.<br>
 `-p | --proceed` continue where you left off. Running
 based on `services.variables.py` until the end of the file or interruption.<br>
 `-ot | --one-time` run the previously command only one time. <br>
-`-a | --analyse` analyses SQLite content. <br>
+`-a | --analyse` analyses SQLite content and create an HTML view. <br>
 `main.py <-t | --test | -s | --start | -p | --proceed | -a | --analyse> [-ot | --one-time]`
-
 
 # More information
 Author(s): Bruno Lançoni<br>
