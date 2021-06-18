@@ -108,7 +108,7 @@ def clean_and_validate(dataframe: pd.DataFrame):
     converts all fields on {dataframe} to string, then drops lines
     where it finds known wrong elements listed on known_wrong_elements.
     If drop_duplicated is True, drops all {dataframe} duplicated lines
-    (_initial_clean_process). Then converts all fields on {dataframe} to string,
+    (_clean_and_validate). Then converts all fields on {dataframe} to string,
     drops lines where test_non_expected_types and/or test_non_expected_values is False.
     Then replaces all unwelcome chars and/or words on its values.
     Finally creates a csv on data/outputs for every thread.
