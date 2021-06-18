@@ -79,10 +79,12 @@ def _pie_graph_creator(analysis_relation: list, dataframe: pd.DataFrame, analysi
     column_2_type_is_list = type(expected_values_and_types[column_2_header_index]) is list
     if column_2_type_is_int:
         dataframe.groupby([column_1]).sum().plot(kind="pie", y=column_2)
-    if column_2_type_is_list:
+    elif column_2_type_is_list and value_1:
         value_counts = dataframe.value_counts([column_1, column_2])[value_1].to_frame()
         value_counts.columns = [f"{column_2} for {value_1}"]
         value_counts.plot(kind="pie", y=f"{column_2} for {value_1}")
+    else:
+        return
     plt.title(title)
     analysis_folder_graph_html_path = os.path.join(analysis_folder_path, f"{title.replace(' ', '_')}.png")
     plt.tight_layout()

@@ -198,9 +198,14 @@ an existing path;
    and its content must exists in `expected_header`;    
 17) `analysis_relation` value must be a list of:<br>
     - `two_grouped_bar` value and a list of two lists of 
-      strings, and a string;      
+      strings where the first value must exist in `expected_header`
+      and the second value must exist in the related
+      `expected_values_and_types`; and a string which 
+      must exists in `expected_header`;      
     - `pie` value and a list of one list of 
-      strings, and a string or None;
+      strings where the values must exist in `expected_header`;
+      and a string which must exist in the list first value related
+      `expected_values_and_types` or None;
     
 # Getting started
 1) Install pandas library with `pip install pandas`;
@@ -223,6 +228,10 @@ based on `services.variables.py` until the end of the file or interruption.<br>
 `-ot | --one-time` run the previously command only one time. <br>
 `-a | --analyse` analyses SQLite content and create an HTML view. <br>
 `main.py <-t | --test | -s | --start | -p | --proceed | -a | --analyse> [-ot | --one-time]`
+
+<figure class="video_container">
+  <iframe src="https://www.youtube.com/embed/JXWP6W3mXXM" frameborder="0" allowfullscreen="true"> </iframe>
+</figure>
 
 # More information
 Author(s): Bruno Lançoni<br>

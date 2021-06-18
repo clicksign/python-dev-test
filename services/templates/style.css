@@ -2,26 +2,26 @@
 /* CSS Document */
 
 * {
-	margin: max(0.5vw, 4px);
-	padding: 0;
+    margin: max(0.5vw, 4px);
+    padding: 0;
 }
 
 html {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
 
 .row {
-	display:grid;
-	grid-template-columns: 50% 50%;
-	max-height: 35vw;
+    display:grid;
+    grid-template-columns: 50% 50%;
+    max-height: 35vw;
 }
 
 .column {
-	height: 34vw;
+    height: 34vw;
 }
 
 img {
-	height: 100%;
+    height: 100%;
     width: 100%;
     object-fit: contain;
 }

@@ -161,7 +161,7 @@ class FileTests(unittest.TestCase):
         Tests if analysis_relation is a dict
         Tests if analysis_relation key is a str
         Tests if analysis_relation keys is in ["two_grouped_bar"]
-        For two_grouped_bar key:
+        For two_grouped_bar value:
             Tests if two_grouped_bar is a three length list
             Tests if two_grouped_bar first value is a list
             Tests if two_grouped_bar second value is a list
@@ -169,6 +169,14 @@ class FileTests(unittest.TestCase):
             Tests if two_grouped_bar list values are str
             Tests if two_grouped_bar list first values are in expected_header
             Tests if two_grouped_bar list second values are in expected_values_and_types related column value
+        For pie value:
+            Tests if pie is a two length list
+            Tests if pie first value is a list
+            Tests if pie second value is a str or None
+            Tests if pie list values are str
+            Tests if pie list values are in expected_header
+            If pie second value is a str:
+                Tests if pie second value are in expected_values_and_types related column value
         """
         entry_value_analysis_relation = VARIABLES["analysis_relation"]
         entry_value_expected_header = VARIABLES["expected_header"]
