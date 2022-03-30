@@ -34,7 +34,7 @@
 
 #### source .env/bin/activate
 #### export AIRFLOW_HOME=$(pwd)/airflow
-#### airflow webserver --port 8080
+#### airflow webserver 
 
 
 ### iniciar o airflow scheduler
