@@ -22,7 +22,7 @@
 
 ### criar uma pasta com o nome dags dentro da pasta airflow
 ### direcionar o arquivo 
-### mudar o caminho 
+### mudar o caminho do arquivo carrega_dados, para onde o script foi armazenado na máquina
 
 #### Após isso, executar o jupyter notebook através do arquivo ETL.ipynb
 #### source .env/bin/activate
