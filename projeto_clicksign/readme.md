@@ -22,7 +22,7 @@
 
 ### criar uma pasta com o nome dags dentro da pasta airflow
 ### direcionar o arquivo 
-
+### mudar o caminho 
 
 #### Após isso, executar o jupyter notebook através do arquivo ETL.ipynb
 #### source .env/bin/activate
