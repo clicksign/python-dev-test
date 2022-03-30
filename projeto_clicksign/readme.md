@@ -1,14 +1,14 @@
-requisitos
+### requisitos
 
-python 3.8.10
-airflow 2.1.2
-jupyter notebook
+#### python 3.8.10
+#### airflow 2.1.2
+#### jupyter notebook
 
-instalação via Linux ou Mac:
-python3 -m venv .env
-source .env/bin/activate
-export AIRFLOW_HOME=$(pwd)/airflow
-pip install apache-airflow==2.1.2
+### instalação via Linux ou Mac:
+#### python3 -m venv .env
+#### source .env/bin/activate
+#### export AIRFLOW_HOME=$(pwd)/airflow
+#### pip install apache-airflow==2.1.2
 
 airflow db init
 
