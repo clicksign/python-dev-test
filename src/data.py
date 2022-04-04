@@ -266,9 +266,3 @@ if __name__ =='__main__':
     """Visualizar dados da tabela."""
     curr.execute("SELECT * FROM data LIMIT(10)")
     print(curr.fetchall())
-
-
-"""Config arquivo de crontab para rodar o arquivo a cada 10 minutos."""
-# # crontab -e
-# 
-# # 10 * * * * /usr/bin/python ./processo_etl.py
