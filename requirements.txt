@@ -1,0 +1,6 @@
+ipykernel
+pandarallel
+pandas
+scikit-learn
+SQLAlchemy
+sweetviz
