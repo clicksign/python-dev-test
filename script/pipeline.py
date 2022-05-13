@@ -1,6 +1,8 @@
 import sys, pickle, os
 from extract import load_adult_datasets
+from script.load import insert_data
 from transform import handle_missing_data
+from load import insert_data
 
 num_lines_to_process = 1630
 
@@ -22,4 +24,9 @@ def main (auto = False):
         # Handle missing data
         dataset = handle_missing_data(dataset)
 
+    # ETL Phase 3 - Load >> Load datasets into database
+    insert_data("adult_data", adult_data)
 
+if __name__ == '__main__':
+    # Check if script is being executed by crontab
+    main('periodic' in sys.argv)
