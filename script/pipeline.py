@@ -8,7 +8,7 @@ from script.eda import run_exploratory_data_analysis
 num_lines_to_process = 1630
 
 # Optionals for running the pipeline
-run_eda = True
+run_eda = False
 # get_insights = True
 
 def pipeline_main (auto = False):
@@ -37,6 +37,10 @@ def pipeline_main (auto = False):
 
     # ETL Phase 3 - Load >> Load datasets into database
     insert_data("adult_data", adult_data)
+
+    # >> Optional << Get insights
+    if get_insights and not auto:
+        get_importance_of_attributes_to_class(adult_data, 'class')
 
 if __name__ == '__main__':
     # Check if script is being executed by crontab
