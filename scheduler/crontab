@@ -1,0 +1,3 @@
+# Script used on Linux to start pipeline
+
+* * * * * /mnt/e/python-dev-test/scheduler/census_bureau_pipeline.sh

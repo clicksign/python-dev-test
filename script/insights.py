@@ -2,6 +2,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import OrdinalEncoder
 import pandas as pd
 
+from script.load import insert_data
+
 def get_feature_importance(model, original_column_name):
     """
     Get the feature importance of a model. 
@@ -63,3 +65,4 @@ def get_importance_of_attributes_to_class(dataset, _class):
     # Create new table with the feature importance, so it can be used in a dashboard
     feat_importances[_class] = 'Prediction Label'
     importance = pd.DataFrame([feat_importances])
+    insert_data("feature_importance", importance)

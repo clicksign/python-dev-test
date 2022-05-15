@@ -7,12 +7,12 @@ def load_sqlite_database():
     global engine
 
     #create folder if not exists
-    if not os.path.exists('../database'):
-        os.makedirs('../database')
+    if not os.path.exists('database'):
+        os.makedirs('database')
 
 
     if engine == None:
-        engine = sqlalchemy.create_engine('sqlite:///../database/db.sqlite', echo=False)
+        engine = sqlalchemy.create_engine('sqlite:///database/db.sqlite', echo=False)
 
     return engine
 

@@ -7,8 +7,8 @@ def run_exploratory_data_analysis(data, name):
     """
 
     #create folder if not exists
-    if not os.path.exists('../EDA'):
-        os.makedirs('../EDA')
+    if not os.path.exists('EDA'):
+        os.makedirs('EDA')
 
     data_report = sv.analyze(data, pairwise_analysis="on")
-    data_report.show_html(filepath=f"../EDA/{name}.html", open_browser=False)
+    data_report.show_html(filepath=f"EDA/{name}.html", open_browser=False)
