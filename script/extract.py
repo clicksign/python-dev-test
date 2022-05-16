@@ -82,16 +82,17 @@ def load_adult_datasets(first_n_lines = None, skip_lines = (0, 0)):
         adult_test = pd.DataFrame(columns=headers)
 
     # Inject processed lines read into global variables    
-    set_processed_lines_read(
-        # If file length is less than the amount of lines to process, 
-        # then set to processed lines global variables the sum between the amount of lines that was set in the 'adult_data'
-        # (because the length of this dataframe is the interval between the last line that was read and the amount of lines to process (1630))
-        # plus the amount of lines that was skipped.
-        # Otherwise, set to processed lines global variables the sum between the amount of lines to process (1630),
-        # plus the last line that was read.
-        len(adult_data) + skip_lines[0] if len(adult_data) < first_n_lines else skip_lines[0] + num_lines_to_process,
-        len(adult_test) + skip_lines[1] if len(adult_test) < first_n_lines else skip_lines[1] + num_lines_to_process,
-    )
+    if first_n_lines:
+        set_processed_lines_read(
+            # If file length is less than the amount of lines to process, 
+            # then set to processed lines global variables the sum between the amount of lines that was set in the 'adult_data'
+            # (because the length of this dataframe is the interval between the last line that was read and the amount of lines to process (1630))
+            # plus the amount of lines that was skipped.
+            # Otherwise, set to processed lines global variables the sum between the amount of lines to process (1630),
+            # plus the last line that was read.
+            len(adult_data) + skip_lines[0] if len(adult_data) < first_n_lines else skip_lines[0] + num_lines_to_process,
+            len(adult_test) + skip_lines[1] if len(adult_test) < first_n_lines else skip_lines[1] + num_lines_to_process,
+        )
 
     # Iterate both datasets because they have the same information 
     # so avoid code duplication

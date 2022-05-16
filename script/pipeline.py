@@ -10,7 +10,7 @@ import time
 
 # Optionals for running the pipeline
 run_eda = False # Run exploratory data analysis
-get_insights = True # Run Machine Learning Model
+get_insights = False # Run Machine Learning Model
 
 def pipeline_main (auto = False):
     # Get last processed lines from csv source files that was wrote inside pickle file
