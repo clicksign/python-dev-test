@@ -26,7 +26,34 @@ def get_db():
     if not os.path.exists(f"{DIR}/db/"):
         os.makedirs(f"{DIR}/db/")
 
-    return sqlalchemy.create_engine(DB_LOCATION)
+    return sqlalchemy.create_engine(DB_LOCATION, echo=False)
+
+
+def create_table(table_name):
+    engine = get_db()
+    with engine.connect() as conn:
+        sql_query = f"""
+        CREATE TABLE IF NOT EXISTS {table_name} (
+            id integer PRIMARY KEY AUTOINCREMENT,
+            age integer,
+            workclass text,
+            fnlwgt real,
+            education text,
+            education_num integer,
+            marital_status text,
+            occupation text,
+            race text,
+            sex text,
+            capital_gain real,
+            capital_loss real,
+            hours_per_week real,
+            native_country text,
+            class text
+        )
+        """
+        trans = conn.begin()
+        conn.execute(sql_query)
+        trans.commit()
 
 
 def transform(df):
@@ -138,6 +165,7 @@ def transform_census_bureau():
 
 def load_census_bureau():
     engine = get_db()
+    create_table("census_bureau_data")
 
     try:
         data = pd.read_csv("/tmp/data_transform.csv")
@@ -146,6 +174,8 @@ def load_census_bureau():
         )
     except Exception:
         print("Data already loaded!")
+
+    create_table("census_bureau_test")
 
     try:
         test = pd.read_csv("/tmp/test_transform.csv")
