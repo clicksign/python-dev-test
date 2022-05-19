@@ -4,8 +4,11 @@ logs
 __pycache__
 db
 utils
+tmp
 airflow-webserver.pid
 airflow.cfg
 airflow.db
 standalone_admin_password.txt
 webserver_config.py
+airflow.db-journal
+test.ipynb

@@ -104,6 +104,9 @@ def extract_census_bureau():
     if not os.path.exists(f"{DIR}/utils/"):
         os.makedirs(f"{DIR}/utils/")
 
+    if not os.path.exists(f"{DIR}/tmp/"):
+        os.makedirs(f"{DIR}/tmp/")
+
     if not os.path.exists(f"{DIR}/utils/process.pkl"):
         with open(f"{DIR}/utils/process.pkl", "wb") as f:
             process = Process(0, 815)
@@ -124,7 +127,7 @@ def extract_census_bureau():
             names=cols,
             nrows=length,
         )
-        data.to_csv("/tmp/data_extract.csv", index=False)
+        data.to_csv(f"{DIR}/tmp/data_extract.csv", index=False)
     except Exception:
         print("End data load!")
 
@@ -137,7 +140,7 @@ def extract_census_bureau():
             names=cols,
             nrows=length,
         )
-        test.to_csv("/tmp/test_extract.csv", index=False)
+        test.to_csv(f"{DIR}/tmp/test_extract.csv", index=False)
     except Exception:
         print("End test load!")
 
@@ -148,27 +151,31 @@ def extract_census_bureau():
 
 
 def transform_census_bureau():
+    DIR = os.path.abspath(os.path.dirname(__file__))
+
     try:
-        data = pd.read_csv("/tmp/data_extract.csv")
+        data = pd.read_csv(f"{DIR}/tmp/data_extract.csv")
         data = transform(data)
-        data.to_csv("/tmp/data_transform.csv", index=False)
+        data.to_csv(f"{DIR}/tmp/data_transform.csv", index=False)
     except Exception:
         print("End data load!")
 
     try:
-        test = pd.read_csv("/tmp/test_extract.csv")
+        test = pd.read_csv(f"{DIR}/tmp/test_extract.csv")
         test = transform(test)
-        test.to_csv("/tmp/test_transform.csv", index=False)
+        test.to_csv(f"{DIR}/tmp/test_transform.csv", index=False)
     except Exception:
         print("End test load!")
 
 
 def load_census_bureau():
+    DIR = os.path.abspath(os.path.dirname(__file__))
     engine = get_db()
+
     create_table("census_bureau_data")
 
     try:
-        data = pd.read_csv("/tmp/data_transform.csv")
+        data = pd.read_csv(f"{DIR}/tmp/data_transform.csv")
         data.to_sql(
             "census_bureau_data", engine, index=False, if_exists="append"
         )
@@ -178,7 +185,7 @@ def load_census_bureau():
     create_table("census_bureau_test")
 
     try:
-        test = pd.read_csv("/tmp/test_transform.csv")
+        test = pd.read_csv(f"{DIR}/tmp/test_transform.csv")
         test.to_sql(
             "census_bureau_test", engine, index=False, if_exists="append"
         )
