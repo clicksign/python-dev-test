@@ -1,2 +1,11 @@
 .ipynb_checkpoints
 .venv
+logs
+__pycache__
+db
+utils
+airflow-webserver.pid
+airflow.cfg
+airflow.db
+standalone_admin_password.txt
+webserver_config.py
