@@ -55,4 +55,4 @@ Como uma ajuda extra, use a seguinte lista de verificação para se certificar d
 - [ x ] Faça comentários ou arquivos de documentação auxiliar (por exemplo, arquivos README) para auxiliar na interpretação de suas soluções. Lembre-se: adoramos ler seus comentários e explicações!
 - [ x ] Salve o código resultante, scripts, documentação, etc. em pastas compatíveis com o mesmo nome do conjunto de dados de entrada (Apenas para nos ajudar! 👍)
 - [ x ] Prepare os commits em branchs separados usando o padrão de nomeação: nome + sobrenome.
-- [ ] Envie o P.R.! (Dedos cruzados!:sunglasses:)
+- [ x ] Envie o P.R.! (Dedos cruzados!:sunglasses:)
