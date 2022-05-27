@@ -48,11 +48,11 @@ Depois de todas as análises e codificação serem feitas, crie uma solicitaçã
 
 Como uma ajuda extra, use a seguinte lista de verificação para se certificar de que todas as etapas do desafio foram concluídas:
 
-- [ ] Baixe todos os arquivos do teste neste repositório.
-- [ ] Crie uma solução adequada usando scripts, bibliotecas de código aberto, soluções de código próprio, etc. Considere que seguiremos suas instruções para executar seu código e ver o resultado.
-- [ ] Certifique-se de que a saída para o teste esteja de acordo com a saída necessária explicada aqui no arquivo *README.md*.
-- [ ] Se você está entusiasmado, pode nos enviar uma análise exploratória dos dados! :ok_hand:.
-- [ ] Faça comentários ou arquivos de documentação auxiliar (por exemplo, arquivos README) para auxiliar na interpretação de suas soluções. Lembre-se: adoramos ler seus comentários e explicações!
-- [ ] Salve o código resultante, scripts, documentação, etc. em pastas compatíveis com o mesmo nome do conjunto de dados de entrada (Apenas para nos ajudar! 👍)
-- [ ] Prepare os commits em branchs separados usando o padrão de nomeação: nome + sobrenome.
+- [ x ] Baixe todos os arquivos do teste neste repositório.
+- [ x ] Crie uma solução adequada usando scripts, bibliotecas de código aberto, soluções de código próprio, etc. Considere que seguiremos suas instruções para executar seu código e ver o resultado.
+- [ x ] Certifique-se de que a saída para o teste esteja de acordo com a saída necessária explicada aqui no arquivo *README.md*.
+- [ x ] Se você está entusiasmado, pode nos enviar uma análise exploratória dos dados! :ok_hand:.
+- [ x ] Faça comentários ou arquivos de documentação auxiliar (por exemplo, arquivos README) para auxiliar na interpretação de suas soluções. Lembre-se: adoramos ler seus comentários e explicações!
+- [ x ] Salve o código resultante, scripts, documentação, etc. em pastas compatíveis com o mesmo nome do conjunto de dados de entrada (Apenas para nos ajudar! 👍)
+- [ x ] Prepare os commits em branchs separados usando o padrão de nomeação: nome + sobrenome.
 - [ ] Envie o P.R.! (Dedos cruzados!:sunglasses:)
