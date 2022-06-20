@@ -40,7 +40,7 @@ Decisões
 graph LR;
     A--setup.sh-->B;
     A--terraform-->C;
-    B-boto3->C;
+    B--boto3-->C;
     C-->D;
     C-->E;
     A[Máquina Local]
