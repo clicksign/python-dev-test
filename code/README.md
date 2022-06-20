@@ -87,6 +87,7 @@ O próximo passo é criar o EC2 e executar a carga.
 
 ```bash
 cd ./aws_terraform
+terraform init
 terraform apply
 ```
 
