@@ -81,7 +81,7 @@ def acabou():
         log_file, 'us_census_bureau.log')
     # desliga a máquina somente se não tem mais registro para buscar
     cmd = 'finaliza.sh'
-    # os.system(cmd)
+    os.system(cmd)
 
 
 def main():
@@ -110,7 +110,9 @@ def main():
     try:
         conn = sqlite3.connect(db_name)  # conexão com o banco
         # busca o maior indice na tabela para continuar de onde parou
-        sql = 'select max(index_col) qtd from df'
+        sql = 'create table if not exists controle_carga (arquivo text)'
+        conn.execute(sql)
+        sql = 'select ifnull(max(index_col), 0) qtd from df where arquivo not in (select arquivo from controle_carga)'
         qtd = pd.read_sql_query(sql, conn)
         qtd = int(qtd['qtd'][0])
         agora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -234,6 +236,7 @@ def main():
     # quando acabar os registros ele mata a máquina para evitar consumo
     if qtd > 0:  # tem dados no dataframe
         # salva no banco de dados
+        df['arquivo'] = theOne
         df.to_sql('df', con=conn, index=False, if_exists='append')
         agora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         print(agora, 'dados inseridos')
