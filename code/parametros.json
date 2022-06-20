@@ -1,0 +1,6 @@
+{"githubPath": ["https://raw.githubusercontent.com/clicksign/python-dev-test/master/data/Adult.data", 
+    "https://raw.githubusercontent.com/clicksign/python-dev-test/master/data/Adult.test"],
+"db_name": "/home/ec2-user/us_census_bureau.db",
+"qtd_linhas_por_carga": 1630,
+"meu_s3": "s3://nome-do-bucket/my-folder/",
+"log_file": "/home/ec2-user/etl.log"}
