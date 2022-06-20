@@ -161,3 +161,46 @@ Ordem de execução:
 3. O crontab chama o arquivo etl.py a cada 10 segundos que fará a carga dos arquivos que estão no parâmetro `parametro.json` (arquivo que fica no bucket).
 4. Ao finalizar a carga dos arquivos o próprio `etl.py` tem uma função chamada `acabou()` que limpa o crontab (isso é mais útil quando a execução é local), transfere os arquivos `us_census_bureau.db` (banco de dados SQLite) e `us_census_bureau.log` (log de execução) para o S3, chama o script `finaliza.sh`.
 5. O script `finaliza.sh` espera 30 segundos para o Python gravar o log e ter certeza que o arquivo foi transferido e encerra a máquina.
+
+## Jeito super fácil
+
+Se você está pensando "Pra quê tudo isso"? Eu tenho uma alternativa, um código super simples que faz a carga. Pode testar utilizando o Jupyter anexo chamado `super-easy.ipynb` ou copiando o código abaixo. :)
+
+```python
+import pandas as pd
+import sqlite3
+from time import sleep
+
+db_name = 'us_census_bureau_easy.db'
+
+conn = sqlite3.connect(db_name)  # conexão com o banco
+
+data = pd.read_csv(
+    "https://raw.githubusercontent.com/clicksign/python-dev-test/master/data/Adult.data",
+    names=[
+        'age', 'workclass', 'fnlwgt', 'education', 'education-num',
+        'marital-status', 'occupation', 'relationship', 'race', 'sex',
+        'capital-gain', 'capital-loss', 'hours-per-week', 'native-country',
+        'class'
+    ])
+
+test = pd.read_csv(
+    "https://raw.githubusercontent.com/clicksign/python-dev-test/master/data/Adult.test",
+    names=[
+        'age', 'workclass', 'fnlwgt', 'education', 'education-num',
+        'marital-status', 'occupation', 'relationship', 'race', 'sex',
+        'capital-gain', 'capital-loss', 'hours-per-week', 'native-country',
+        'class'
+    ])
+
+df = pd.concat([data, test])
+qtd = len(df)
+
+while qtd > 0:
+    insere = df.tail(1630).index
+    df.drop(insere, inplace=True)
+    df.to_sql('df', con=conn, index=False, if_exists='append')
+    qtd = len(df)
+    print(qtd)
+    sleep(10)
+```
