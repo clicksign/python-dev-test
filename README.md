@@ -1,58 +1,102 @@
-# Desafio - Dev Python
+# Estudo de caso
 
-Este repositório possui um teste que visa avaliar sua curiosidade, seus conhecimentos em Python, análise e limpeza de dados, Storytelling e conceitos relacionados a processos ETL/ELT. O teste possui seu próprio conjunto de arquivos, parâmetros, instruções e estratégias para ser resolvido. Portanto, estude cada detalhe com sabedoria.
+Foi buscado neste projeto ser efetivo, focando na funcionalidade, tempo e evitar problemas de compatibilidade ou dificuldade de execução.
 
-# US Census Bureau - Criação de um processo ETL/ELT
+Dado a simplicidade do desafio, o código foi realizado integralmente em python, sem utilização de frameworks como no caso do Apache AirFlow visto que para o caso em questão não haveria necessidade e aumentaria possível problema de compatibilidade.
 
-Sua tarefa é criar um processo ETL/ELT com agendamento que transporte dados úteis, presentes nos datasets fornecidos, para um banco de dados relacional. Os critérios para a execução deste desafio são:
+# Pacotes necessários
 
-1. Suas **únicas e excluisivas** fonte de dados devem ser os datasets fornecidos neste repositório;
-2. Você deve processar **todos** os arquivos de dados fornecidos;
-3. Seu script deve ser agendado para rodar a cada **10 segundos** processando **1.630 registros**;
-4. Aplique todas as transformações e limpeza de dados que julgar necessária (*Tenha em mente que precisamos acessar dados úteis que possibilitem a extração de insights!*);
-5. Carregue os dados processados em um banco de dados **Postgres ou SQLite** e;
-6. Ao criar sua tabela no banco de dados, respeite a **tipagem dos dados e o nome das colunas** fornecidas no arquivo de descrição.
+pip install python-time
+pip install SQLAlchemy
+pip install pandas
 
-# Dicas
+# Processo ETL
 
-(:gem:) Facilite sua vida! Use alguma tecnologia de agendamento como o Apache *Airflow* ou até mesmo o *Crontab* do Linux.
+Priorizei assim a efetividade e tempo de execução, onde em todo o processo de ETL não foi utilizado nenhum looping for, sendo todo o processo executado em aproximadamente 2 segundos.
 
-# Instruções
+Os tabelas Adult.data e Adult.txt unidas em um único dataframe, sendo este dataframe a fonte de nossos dados brutos(source). Como também foi criado o datafrane starea (staging) a qual foram alterados sem prejudicar os dados fontes, conforme modelagem típica para implantação de dataware house.
 
-Por favor, desenvolva um script ou programa de computador utilizando a linguagem de programação **Python** para resolver o problema proposto. Estamos cientes da dificuldade associada a tarefa, mas toda criatividade, estratégia de raciocínio, detalhes na documentação do código, estrutura e precisão do código serão usados ​​para avaliar o desempenho do candidato. Portanto, certifique-se de que o código apresentado reflita o seu conhecimento tanto quanto possível!
+Utilizei o próprio python para fazer análise exploratória de dados, verificando valores discrepantes nos valores em cada coluna.
 
-Esperamos que uma solução possa ser alcançada dentro de um período de tempo razoável, considerando alguns dias, portanto, fique à vontade para usar o tempo da melhor forma possível. Entendemos que você pode ter uma agenda apertada, portanto, não hesite em nos contatar para qualquer solicitação adicional👍.
+Verifiquei assim que em geral havia espaços em branco nos valores e alguns dados errôneos. Sendo assim utilizei funções próprias para tratamento de string e padronização dos dados errôneos.
 
-## Datasets
+Exemplo: 
 
-O que você precisará para completar este desafio está armazenado na pasta **data** deste repositório. Este diretório contém os seguintes arquivos: 
+df_starea['workclass'] = df_starea['workclass'].apply(lambda x:  "<error>" if ('?' in x) else x.strip() ) 
 
-1. (:mag_right:) **Adult.data** (*Arquivo de dados*)
-2. (:mag_right:) **Adult.test** (*Arquivo de dados*)
-3. (:clipboard:) **Description** (*Arquivo de informações*)
+Toda as linhas do arquivo estão comentadas explicitando devidadamente o procedimento em cada linha de código.
+
+Após o processo de ETL ter sido feito, foi realizado a conexão com o banco de dados postgre, utilizando a biblioteca sqlalchemy.
+
+#Integração com o banco
+
+Para conectar com outro banco postgree que esteja on premisses, basta alterar as linhas 145,146,147 e 148, especificando o usuário, senha, porta e nome da dataabase.
+
+port='5433' #porta do banco
+user = 'postgres' #user do banco
+password= '123' #senha do banco
+bd_name ='test' #nome da database
+
+Foi criado assim os comandos SQL para serem executados dentro do python, tanto para definição das chaves primárias e para criação das views sem os dados errôneos.
+
+Exemplos:
+
+#Cria a chave primária
+sqlcomand="""ALTER TABLE public."Adult_data"
+  ADD CONSTRAINT id_data 
+    PRIMARY KEY (index);"""
+
+#Cria a view apenas com os válores válidos
+sqlcomand3= """CREATE VIEW data_only_valid AS
+SELECT * FROM public."Adult_data"
+    WHERE "native-country" <> '<error>' and age > 0 and workclass <> '<error>' and occupation <> '<error>' and "capital-gain" <> -99 and "hours-per-week" <> -99;"""
+
+Para o tratamento dos dados em lote e inserção no banco de dados, foi utilizado a função do pandas to_sql(), onde ela pega a conexão já feita com o sqlalchemy e insere os dados com velocidade os dados no banco.
+
+Foi criado assim um controle de lote, para inserção de apenas 1630 registros (linhas) por vez e aguarda 10 segundos para a próxima inserção.
+
+Exemplo:
+
+for i in range(0,len(df_data_clean),1630):
+
+	#por questões de velocidade e praticidade para inserção, foi utilizado o método pandas.to_sql()
+
+	df_data_clean[i:(i+1630)].to_sql(name='Adult_data', con=engine, if_exists='append', index=True , dtype={'index': sqlalchemy.types.INTEGER(), 'age': sqlalchemy.types.INTEGER(),'workclass': sqlalchemy.types.VARCHAR(length=50),
+	'fnlwgt': sqlalchemy.types.INTEGER(),
+	'education': sqlalchemy.types.VARCHAR(length=50),
+	'education-num':  sqlalchemy.types.INTEGER(),
+	'marital-status' :sqlalchemy.types.VARCHAR(length=50),
+    'occupation': sqlalchemy.types.VARCHAR(length=50),
+    'relationship': sqlalchemy.types.VARCHAR(length=50),
+    'status': sqlalchemy.types.VARCHAR(length=50),
+     race':  sqlalchemy.types.VARCHAR(length=50),
+    'sex': sqlalchemy.types.VARCHAR(length=50),
+    'capital-gain': sqlalchemy.types.Float(precision=3, asdecimal=True),
+    'capital-loss': sqlalchemy.types.Float(precision=3, asdecimal=True),
+    'hours-per-week': sqlalchemy.types.INTEGER(),
+    'native-country':sqlalchemy.types.VARCHAR(length=50),
+    'class' :sqlalchemy.types.VARCHAR(length=50)
+	 	
+	} )
+	#aguarde 10 segundos, para fazer a nova inserção
+	time.sleep(10)
+	print('1630 dados inseridos, aguarde 10 segundos')
 
 
-## Enviando sua solução
+Nome das views: **data_only_valid** e **test_only_valid**.
 
-Faça um fork deste projeto, e crie um branch com sua conta no Github, utilizando seu nome e sobrenome nele. Por exemplo, um branch com o nome *"Franklin Ferreira"* definirá que o candidato com o mesmo nome está fazendo o upload do código com a solução para o teste. Por favor, coloque os scripts e o código em pastas separadas (com o mesmo nome das pastas de arquivo fornecidas) para facilitar nossa análise.
+Creio assim que todas as tarefas demandadas foram efetivadas, podendo ainda serem executadas de diversas formas, como realizar o processo de ETL dentro do próprio banco, utilizar o airflow para orquestração ou com alguma ferramenta de integração de dados como o Pentaho, ODI entre outras.
 
-Se desejar, crie um arquivo PDF com imagens nos indicando todo o processo que executou para gerar sua solução. Prezamos muito por bons *Storytellings*.
 
-Além disso, esperamos que o candidato possa explicar o procedimento e a estratégia adotadas usando muitos, muitos e muitos comentários ou até mesmo um arquivo README separado. Esta parte da descrição é muito importante para facilitar nosso entendimento de sua solução! Lembre-se que o primeiro contato técnico com o candidato é por meio deste teste de codificação. Apesar de reforçarmos a importância da documentação e explicação do código, somos muito flexíveis para permitir a liberdade de escolher qual será o tipo de comunicação (por exemplo, arquivos README, comentários de código, etc).
+Caso seja desejado que se faça o projeto de forma mais robusta, será um prazer, porém, dado minha experiência considerei realizar o mais efetivo e menos propensos a erro, para o caso em questão.
 
-Outra boa dica a seguir é o conceito geral de engenharia de software que também é avaliado neste teste. Espera-se que o candidato tenha um conhecimento sólido de tópicos como **Test-Driven Development (TDD)**, e paradigmas de código limpo em geral. Em resumo, é uma boa ideia prestar atenção tanto ao código quanto às habilidades dos engenheiros de software.
 
-Depois de todas as análises e codificação serem feitas, crie uma solicitação de pull (PR) neste repositório.
 
-# Resumo
 
-Como uma ajuda extra, use a seguinte lista de verificação para se certificar de que todas as etapas do desafio foram concluídas:
 
-- [ ] Baixe todos os arquivos do teste neste repositório.
-- [ ] Crie uma solução adequada usando scripts, bibliotecas de código aberto, soluções de código próprio, etc. Considere que seguiremos suas instruções para executar seu código e ver o resultado.
-- [ ] Certifique-se de que a saída para o teste esteja de acordo com a saída necessária explicada aqui no arquivo *README.md*.
-- [ ] Se você está entusiasmado, pode nos enviar uma análise exploratória dos dados! :ok_hand:.
-- [ ] Faça comentários ou arquivos de documentação auxiliar (por exemplo, arquivos README) para auxiliar na interpretação de suas soluções. Lembre-se: adoramos ler seus comentários e explicações!
-- [ ] Salve o código resultante, scripts, documentação, etc. em pastas compatíveis com o mesmo nome do conjunto de dados de entrada (Apenas para nos ajudar! 👍)
-- [ ] Prepare os commits em branchs separados usando o padrão de nomeação: nome + sobrenome.
-- [ ] Envie o P.R.! (Dedos cruzados!:sunglasses:)
+
+
+
+
+
+
