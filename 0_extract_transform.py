@@ -201,7 +201,7 @@ if __name__ == "__main__":
     df = AttNativeCountry().corrigir(df)
     df = AttNativeCountry().corrigir(df)
 
-    df.to_csv('outputs/base_tratada_para_inserir.csv')
+    df.to_csv('outputs/base_tratada_para_inserir.csv',index=False)
 
     print("Transformação Realizada com sucesso")
 
