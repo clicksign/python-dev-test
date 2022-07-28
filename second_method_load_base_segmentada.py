@@ -8,13 +8,7 @@ from tqdm import tqdm
 import pandas as pd
 import time
 from first_method_full_load import InsercaoAdults
-
-DB_USER = 'user'
-DB_PASS = 'passwd'
-DB_HOST = 'host.com'
-DB_PORT = 5432
-DB_NAME = 'db_name'
-DB_CONN = f'postgresql://{DB_USER}:@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+from environment_variables import DB_CONN
 
 
 class StageData():
@@ -100,11 +94,16 @@ class InsercaoStagedAdults(InsercaoAdults, StageData):
 
     def insert_in_database(self, df):
         print("Inserindo em Database")
-        # with self.engine.connect() as conn:
-        #     df.to_sql('tb_adults', con=conn,
-        #               schema='public', if_exists='append',
-        #               dtype=self.dtypes,
-        #               index=False)
+        try:
+            pass
+        #     with self.engine.connect() as conn:
+        #         df.to_sql('tb_adults', con=conn,
+        #                   schema='public', if_exists='append',
+        #                   dtype=self.dtypes,
+        #                   index=False)
+        except Exception as ex:
+            print(f'Erro ao inserir no Banco de Dados>>> {ex}')
+            raise ex
 
     def run_insert(self, slice_len):
         index_atualizado, slice_para_inserir = self.select_stage_data_to_insert(slice_len)
@@ -114,13 +113,13 @@ class InsercaoStagedAdults(InsercaoAdults, StageData):
 
 
 #
-def run(slice_len):
+def run_insert_db_final(slice_len):
     obj_insertor = InsercaoStagedAdults()
     obj_insertor.run_insert(slice_len=slice_len)
 
 
-if __name__ == "__main__":
-    while True:
-        run(slice_len=1630)
-        time.sleep(1)
-        print("execucao concluida")
+# if __name__ == "__main__":
+#     while True:
+#         run_insert_db_final(slice_len=1630)
+#         time.sleep(10)
+#         print("Insercao de lote concluida")

@@ -10,7 +10,8 @@ Canais de Streamings e etc.
 duplicar o código de Load e Transformation ao mesmo tempo que se mantém a organização do repositório
 
 """
-if __name__ == "__main__":
+
+def run_extract_transform():
     import pandas as pd
 
 
