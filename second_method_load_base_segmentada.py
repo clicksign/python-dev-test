@@ -95,12 +95,11 @@ class InsercaoStagedAdults(InsercaoAdults, StageData):
     def insert_in_database(self, df):
         print("Inserindo em Database")
         try:
-            pass
-        #     with self.engine.connect() as conn:
-        #         df.to_sql('tb_adults', con=conn,
-        #                   schema='public', if_exists='append',
-        #                   dtype=self.dtypes,
-        #                   index=False)
+            with self.engine.connect() as conn:
+                df.to_sql('tb_adults', con=conn,
+                          schema='publc', if_exists='append',
+                          dtype=self.dtypes,
+                          index=False)
         except Exception as ex:
             print(f'Erro ao inserir no Banco de Dados>>> {ex}')
             raise ex
@@ -116,6 +115,7 @@ class InsercaoStagedAdults(InsercaoAdults, StageData):
 def run_insert_db_final(slice_len):
     obj_insertor = InsercaoStagedAdults()
     obj_insertor.run_insert(slice_len=slice_len)
+    return True
 
 
 # if __name__ == "__main__":
