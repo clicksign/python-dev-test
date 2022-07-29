@@ -44,7 +44,7 @@ def run_extract_transform():
     # de um problema específico, pode ser utilizada para absorver dados de origens diversas e com diferentes modelagens,
     # assegurando o escopo reduzido e organizado, auxiliando na manutenção de um código limpo e etc para um projeto mais complexo
     # Não obstante, tal arquitetura possui uma estrutura que facilita a implementação de versionamento do método de tratamento
-    # para os diferentes Atributos/Fontes caso seja necessário, por exemplo, conviver com mais de uma versão de modelo de dados trafegantes
+    # para os diferentes Atributos/Fontes caso seja necessário, por exemplo, conviver com mais de uma versão de modelo de dados transeuntes
 
 
 
@@ -200,7 +200,7 @@ def run_extract_transform():
     df = AttCapitalGain().corrigir(df)
     df = AttHoursPerWeek().corrigir(df)
     df = AttNativeCountry().corrigir(df)
-    df = AttNativeCountry().corrigir(df)
+    df = AttClass().corrigir(df)
 
     df.to_csv('outputs/base_tratada_para_inserir.csv',index=False)
 
