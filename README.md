@@ -6,7 +6,7 @@ Os detalhes da solução estão descritos no pdf "A Proposta da Solução.pdf"
 
 A resolução final deste projeto possui quatro arquivos principais, pensados de modo a ilustrar uma parte do horizonte de conhecimentos que compõe meu background profissional: 
 - EDA.ipynb
-Jupyter Notebook utilizado para realizar a análise exploratória de dados, elaboração dos processos de transformação dos atributos da base e desenvolvimento de dois modelos de machine learning 
+Jupyter Notebook utilizado para realizar a análise exploratória de dados, elaboração dos processos de transformação dos atributos da base e desenvolvimento de dois modelos de machine learning e inferencia de Insights.
 - extract_transform.py;
 Arquivo responsável por aplicar as transformações definidas através do processo de EDA  na base de dados de forma produtizada
 - first_method_full_load.py;
