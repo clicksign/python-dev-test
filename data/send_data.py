@@ -2,42 +2,62 @@ import json
 import requests
 
 
-def prepare_payload(item):
-    payload = [
-        {
-            "age": item.get("age", None),
-            "workclass": item.get("workclass", None),
-            "fnlwgt": item.get("fnlwgt", None),
-            "education": item.get("education", None),
-            "education-num": item.get("education-num", None),
-            "marital-status": item.get("marital-status", None),
-            "occupation": item.get("occupation", None),
-            "relationship": item.get("relationship", None),
-            "race": item.get("race", None),
-            "sex": item.get("sex", None),
-            "capital_gain": item.get("capital_gain", None),
-            "capital_loss": item.get("capital_loss", None),
-            "hours_per_week": item.get("hours_per_week", None),
-            "native_country": item.get("native_country", None),
-            "class": item.get("class", None)
-        }
-    ]
+def prepare_payload(df):
+    """
+        Prepares paylod to send to database.
 
-    return payload
+        params
+        ------------
+            df:   Dataframe
+    """
 
-
-def create_register(payload):
-    data = json.dumps(payload)
-    url = "http://127.0.0.1:8000/api/v1/census-etl"
-    response = requests.request("POST", url, json=payload)
-    print(response.text)
-    return response
+    payload = []
+    for index, df in df.iterrows():
+        if df['is_correct'] == False:
+            continue
+        else:
+            payload.append(
+                {
+                    "age": int(df['age']),
+                    "workclass": df['workclass'],
+                    "fnlwgt": int(df["fnlwgt"]),
+                    "education": df["education"],
+                    "education_num": int(df["education_num"]),
+                    "marital_status": df["marital_status"],
+                    "occupation": df["occupation"],
+                    "relationship": df["relationship"],
+                    "race": df["race"],
+                    "sex": df["sex"].lower(),
+                    "capital_gain": int(df["capital_gain"]),
+                    "capital_loss": int(df["capital_loss"]),
+                    "hours_per_week": int(df["hours_per_week"]),
+                    "native_country": df["native_country"],
+                    "class_category": df["class_category"]
+                }
+            )
+    json_payload = payload
+    for load in payload:
+        print(f'json_payload: {load}')
+    return json_payload
 
 
 def send_data(df):
-    for item in df:
-        payload = prepare_payload(item)
-        data = json.dumps(payload)
-        response = create_register(payload)
+    """
+        Makes the request to the database endpoint.
 
-    return print(response)
+        params
+        ------------
+            df:   Dataframe
+    """
+
+    payload = prepare_payload(df)
+    url = "http://localhost:8000/api/v1/census-etl"
+    headers = {
+        "Content-Type": "application/json",
+    }
+    response = requests.request("POST", url, json=payload, headers=headers)
+    try:
+        return json.loads(response.text)
+    except Exception as e:
+        print('Ingestion error: ', e)
+        return "error"
