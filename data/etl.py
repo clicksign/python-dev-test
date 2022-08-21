@@ -1,6 +1,4 @@
-import pandas as pd
 import os
-import re
 
 from .functions import *
 from .send_data import send_data
@@ -21,6 +19,8 @@ def handle_file():
         names=names,
         dtypes=dtypes
     )
+
+    get_removed_data(data)
 
     checkpoint_batch(data)
 
