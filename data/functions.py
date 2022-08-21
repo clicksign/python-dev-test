@@ -41,6 +41,11 @@ def generate_column_name(text):
     for i in range(2):
         columns.pop()
 
+    for idx, name in enumerate(columns):
+        if re.search(r'\bclass\b', name):
+            columns[idx] = 'class_category'
+        else:
+            continue
     return columns
 
 
