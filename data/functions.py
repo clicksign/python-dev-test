@@ -117,7 +117,8 @@ def get_data(file_path, steps, names, dtypes):
             for column in str_columns:
                 df.loc[df[column].str.contains(
                     '^([\s\d]+)$', regex=True) == True, 'is_correct'] = False
-                return df
+            df.rename(columns={'class': 'class_category'}, inplace=True)
+            return df
         except Exception as e:
             print(e)
     else:
@@ -132,6 +133,7 @@ def get_data(file_path, steps, names, dtypes):
             for column in str_columns:
                 df.loc[df[column].str.contains(
                     '^([\s\d]+)$', regex=True) == True, 'is_correct'] = False
+            df.rename(columns={'class': 'class_category'}, inplace=True)
             return df
         except Exception as e:
             print(e)
