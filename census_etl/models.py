@@ -7,7 +7,7 @@ class CensusEtl(models.Model):
     GENDER = (('male', 'male'), ('female', 'female'))
     id = models.UUIDField(primary_key=True, default=uuid4)
     age = models.IntegerField(validators=[MinValueValidator(
-        5), MaxValueValidator(100)], null=True, blank=True)
+        1), MaxValueValidator(100)], null=True, blank=True)
     workclass = models.CharField(max_length=80, null=True, blank=True)
     sex = models.CharField(max_length=10, choices=GENDER,
                            null=True, blank=True)
