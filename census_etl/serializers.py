@@ -54,7 +54,8 @@ class CensusEtlSerializer(serializers.ModelSerializer):
                     'hours_per_week',
                     'native_country',
                     'class_category'
-                ]
+                ],
+                message='Entry is already in the database.'
             )
         ]
         list_serializer_class = CensusEtlBulkCreateUpdateSerializer
