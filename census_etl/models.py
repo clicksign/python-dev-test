@@ -12,7 +12,7 @@ class CensusEtl(models.Model):
     sex = models.CharField(max_length=10, choices=GENDER,
                            null=True, blank=True)
     fnlwgt = models.IntegerField(null=True, blank=True)
-    eduction = models.CharField(max_length=40, null=True, blank=True)
+    education = models.CharField(max_length=40, null=True, blank=True)
     education_num = models.IntegerField(null=True, blank=True)
     marital_status = models.CharField(max_length=40, null=True, blank=True)
     occupation = models.CharField(max_length=40, null=True, blank=True)
