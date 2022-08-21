@@ -1,5 +1,6 @@
 import pandas as pd
 import re
+from datetime import datetime as dt
 
 
 def read_description_file(description_file):
@@ -104,12 +105,13 @@ def get_data(file_path, steps, names, dtypes):
             df = pd.read_csv(file_path, nrows=steps,
                              names=names, skipinitialspace=True)
             df = df.astype('str')
+            df['is_correct'] = True
             for column in int_columns:
                 df.loc[df[column].str.contains(
-                    '[a-z]', regex=True, case=False) == True] = '0'
+                    '[a-z]', regex=True, case=False) == True, 'is_correct'] = False
             for column in str_columns:
                 df.loc[df[column].str.contains(
-                    '[0-9]', regex=True) == True] = None
+                    '^([\s\d]+)$', regex=True) == True, 'is_correct'] = False
                 return df
         except Exception as e:
             print(e)
@@ -118,20 +120,49 @@ def get_data(file_path, steps, names, dtypes):
             df = pd.read_csv(file_path, skiprows=steps*counter,
                              nrows=steps, names=names, skipinitialspace=True)
             df = df.astype('str')
+            df['is_correct'] = True
             for column in int_columns:
                 df.loc[df[column].str.contains(
-                    '[a-z]', regex=True, case=False) == True] = '0'
+                    '[a-z]', regex=True, case=False) == True, 'is_correct'] = False
             for column in str_columns:
                 df.loc[df[column].str.contains(
-                    '[0-9]', regex=True) == True] = None
+                    '^([\s\d]+)$', regex=True) == True, 'is_correct'] = False
             return df
         except Exception as e:
             print(e)
 
+    def get_removed_data(df):
+        """
+        Creates a file with removed data with some data inconsistency,
+        found in the previous step.
+
+        params
+        ------------
+            df:   Dataframe
+        """
+        if os.path.exists('removed_data.json') is False:
+            removed_data = df.loc[df['is_correct'] == False]
+            removed_data['extract_date'] = dt.now().strftime(
+                "%Y-%m-%d %H:%M:%S.%f")
+            removed_data = removed_data.reset_index()
+            removed_data.drop(columns='index', inplace=True)
+            return removed_data.to_json(os.getcwd()+'/removed_data.json')
+        else:
+            for idx, row in df.iterrows():
+                removed_data = pd.read_json(os.getcwd()+'/removed_data.json')
+                removed_data.drop_duplicates(ignore_index=True, keep='first')
+                removed_data = removed_data.append(
+                    df.loc[df['is_correct'] == False])
+                removed_data = removed_data.reset_index()
+                removed_data.drop(columns='index', inplace=True)
+                removed_data['extract_date'] = dt.now().strftime(
+                    "%Y-%m-%d %H:%M:%S.%f")
+                return removed_data.drop_duplicates(ignore_index=True, keep='first').to_json(os.getcwd()+'/removed_data.json')
+
 
 def checkpoint_batch(df):
     """
-    Create a file of checkpoint to garantee the next batch.
+    Creates a file of checkpoint to garantee the next batch.
     params
     ------------
         df:   Dataframe
