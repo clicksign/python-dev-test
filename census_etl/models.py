@@ -28,3 +28,23 @@ class CensusEtl(models.Model):
 class Counter(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4)
     counter = models.IntegerField(null=True, blank=True)
+
+
+class Meta:
+    unique_together = (
+        'age',
+        'workclass',
+        'fnlwgt',
+        'education',
+        'education_num',
+        'marital_status',
+        'occupation',
+        'relationship',
+        'race',
+        'sex',
+        'capital_gain',
+        'capital_loss',
+        'hours_per_week',
+        'native_country',
+        'class_category',
+    )

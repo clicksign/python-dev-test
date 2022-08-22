@@ -34,8 +34,6 @@ def send_counter(df):
     for item in df:
         payload = counter_payload(item)
         response = requests.request("POST", url, json=payload, headers=headers)
-        # for load in payload:
-        #     # print(f'json_payload: {item}')
 
     try:
         return json.loads(response.text)

@@ -36,8 +36,6 @@ def prepare_payload(df):
                 }
             )
     json_payload = payload
-    for load in payload:
-        print(f'json_payload: {load}')
     return json_payload
 
 
@@ -49,14 +47,15 @@ def send_data(df):
         ------------
             df:   Dataframe
     """
-
     payload = prepare_payload(df)
-    url = "http://localhost:8000/api/v1/census-etl/"
+    url = "http://127.0.0.1:8001/api/v1/census-etl/"
     headers = {
         "Content-Type": "application/json",
     }
     response = requests.request("POST", url, json=payload, headers=headers)
     try:
+        for load in payload:
+            print(f'json_payload: {[load]}')
         return json.loads(response.text)
     except Exception as e:
         print('Ingestion error: ', e)

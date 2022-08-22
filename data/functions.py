@@ -4,7 +4,7 @@ from datetime import datetime as dt
 import os
 import requests
 
-from send_counter import *
+from .send_counter import *
 
 
 def read_description_file(description_file):
@@ -100,7 +100,7 @@ def get_data(file_path, steps, names, dtypes):
             str_columns.append(key)
 
     request = requests.request(
-        "GET", "http://localhost:8000/api/v1/census-etl/counter")
+        "GET", "http://127.0.0.1:8001/api/v1/census-etl/counter")
     counter = 0
     data = request.json()
     if len(data) == 0:
@@ -154,7 +154,7 @@ def checkpoint_batch(df, steps):
         df:   Dataframe
     """
     request = requests.request(
-        "GET", "http://localhost:8001/api/v1/census-etl/counter")
+        "GET", "http://127.0.0.1:8001/api/v1/census-etl/counter")
     if len(request.json()) == 0:
         data = df
         data['counter'] = 1
@@ -164,9 +164,7 @@ def checkpoint_batch(df, steps):
             freq_value = x.get('counter')
         freq_value += 1
         data['counter'] = freq_value
-
     for index, row in data.iterrows():
-        send_counter(data.to_dict(orient='records'))
         if len(data) != steps:
             frq = data['counter'].max()
             print('Data load finished.')
