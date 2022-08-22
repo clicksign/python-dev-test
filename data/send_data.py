@@ -51,7 +51,7 @@ def send_data(df):
     """
 
     payload = prepare_payload(df)
-    url = "http://localhost:8000/api/v1/census-etl"
+    url = "http://localhost:8000/api/v1/census-etl/"
     headers = {
         "Content-Type": "application/json",
     }
