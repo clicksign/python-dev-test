@@ -29,6 +29,7 @@ def generate_column_name(text):
     ------------
         text:   return from read_description_file function.
     '''
+
     columns = []
     for sentences in text:
         lines = map(normalizer, re.findall('^\s*\D[^:]+:\s*', sentences))
@@ -40,12 +41,6 @@ def generate_column_name(text):
                 continue
     for i in range(2):
         columns.pop()
-
-    for idx, name in enumerate(columns):
-        if re.search(r'\bclass\b', name):
-            columns[idx] = 'class_category'
-        else:
-            continue
     return columns
 
 
@@ -178,10 +173,12 @@ def checkpoint_batch(df):
         counter = 0
     else:
         data = pd.read_json('checkpoint.json')
+        data['extract_date'] = dt.now().strftime("%Y-%m-%d %H:%M:%S.%f")
         counter = data['counter'].max()
 
     for index, row in df.iterrows():
         # Update count
+        df['extract_date'] = dt.now().strftime("%Y-%m-%d %H:%M:%S.%f")
         counter += 1
         df['counter'] = counter
         df['last_index'] = counter*steps
