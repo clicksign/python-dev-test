@@ -1,6 +1,7 @@
 import pandas as pd
 import re
 from datetime import datetime as dt
+import os
 
 
 def read_description_file(description_file):
