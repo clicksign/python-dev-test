@@ -1,6 +1,6 @@
 from rest_framework import generics
-from .models import CensusEtl
-from .serializers import CensusEtlSerializer
+from .models import CensusEtl, Counter
+from .serializers import CensusEtlSerializer, CountSerializer
 
 
 class CensusEtlViewSet(generics.ListCreateAPIView):
@@ -11,3 +11,8 @@ class CensusEtlViewSet(generics.ListCreateAPIView):
         if isinstance(kwargs.get("data", {}), list):
             kwargs["many"] = True
         return super(CensusEtlViewSet, self).get_serializer(*args, **kwargs)
+
+
+class CounterView(generics.ListCreateAPIView):
+    queryset = Counter.objects.all()
+    serializer_class = CountSerializer

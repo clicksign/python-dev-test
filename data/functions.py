@@ -96,10 +96,10 @@ def get_data(file_path, steps, names, dtypes):
         else:
             str_columns.append(key)
 
-    if os.path.exists('checkpoint.json') is False:
+    if os.path.exists(os.getcwd() + '/data/checkpoint/checkpoint.json') is False:
         counter = 0
     else:
-        data = pd.read_json('checkpoint.json')
+        data = pd.read_json(os.getcwd() + '/data/checkpoint/checkpoint.json')
         counter = data['counter'].max()
     if counter == 0:
         try:
@@ -134,46 +134,48 @@ def get_data(file_path, steps, names, dtypes):
         except Exception as e:
             print(e)
 
-    def get_removed_data(df):
-        """
-        Creates a file with removed data with some data inconsistency,
-        found in the previous step.
 
-        params
-        ------------
-            df:   Dataframe
-        """
-        if os.path.exists('removed_data.json') is False:
-            removed_data = df.loc[df['is_correct'] == False]
-            removed_data['extract_date'] = dt.now().strftime(
-                "%Y-%m-%d %H:%M:%S.%f")
+def get_removed_data(df):
+    """
+    Creates a file with removed data with some data inconsistency,
+    found in the previous step.
+
+    params
+    ------------
+        df:   Dataframe
+    """
+    if os.path.exists(os.getcwd() + '/data/removed_data/removed_data.json') is False:
+        removed_data = df.loc[df['is_correct'] == False]
+        removed_data['extract_date'] = dt.now().strftime(
+            "%Y-%m-%d %H:%M:%S.%f")
+        removed_data = removed_data.reset_index()
+        removed_data.drop(columns='index', inplace=True)
+        return removed_data.to_json(os.getcwd() + '/data/removed_data/removed_data.json')
+    else:
+        for idx, row in df.iterrows():
+            removed_data = pd.read_json(
+                os.getcwd() + '/data/removed_data/removed_data.json')
+            removed_data.drop_duplicates(ignore_index=True, keep='first')
+            removed_data = removed_data.append(
+                df.loc[df['is_correct'] == False])
             removed_data = removed_data.reset_index()
             removed_data.drop(columns='index', inplace=True)
-            return removed_data.to_json(os.getcwd()+'/removed_data.json')
-        else:
-            for idx, row in df.iterrows():
-                removed_data = pd.read_json(os.getcwd()+'/removed_data.json')
-                removed_data.drop_duplicates(ignore_index=True, keep='first')
-                removed_data = removed_data.append(
-                    df.loc[df['is_correct'] == False])
-                removed_data = removed_data.reset_index()
-                removed_data.drop(columns='index', inplace=True)
-                removed_data['extract_date'] = dt.now().strftime(
-                    "%Y-%m-%d %H:%M:%S.%f")
-                return removed_data.drop_duplicates(ignore_index=True, keep='first').to_json(os.getcwd()+'/removed_data.json')
+            removed_data['extract_date'] = dt.now().strftime(
+                "%Y-%m-%d %H:%M:%S.%f")
+            return removed_data.drop_duplicates(ignore_index=True, keep='first').to_json(os.getcwd() + '/data/removed_data/removed_data.json')
 
 
-def checkpoint_batch(df):
+def checkpoint_batch(df, steps):
     """
     Creates a file of checkpoint to garantee the next batch.
     params
     ------------
         df:   Dataframe
     """
-    if os.path.exists('checkpoint.json') is False:
+    if os.path.exists(os.getcwd() + '/data/checkpoint/checkpoint.json') is False:
         counter = 0
     else:
-        data = pd.read_json('checkpoint.json')
+        data = pd.read_json(os.getcwd() + '/data/checkpoint/checkpoint.json')
         data['extract_date'] = dt.now().strftime("%Y-%m-%d %H:%M:%S.%f")
         counter = data['counter'].max()
 
@@ -188,7 +190,7 @@ def checkpoint_batch(df):
             print(f'Total of ingestion: {counter*steps}')
             break
         else:
-            df.to_json(os.getcwd()+'/checkpoint.json')
+            df.to_json(os.getcwd()+'/data/checkpoint/checkpoint.json')
             print(f'Loading data...')
             print(f'Number of ingestion: {counter}')
             print(f'Total of ingestion: {counter*steps}')

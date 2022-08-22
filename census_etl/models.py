@@ -23,3 +23,8 @@ class CensusEtl(models.Model):
     hours_per_week = models.IntegerField(null=True, blank=True)
     native_country = models.CharField(max_length=40, null=True, blank=True)
     class_category = models.CharField(max_length=10, null=True, blank=True)
+
+
+class Counter(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid4)
+    counter = models.IntegerField(null=True, blank=True)

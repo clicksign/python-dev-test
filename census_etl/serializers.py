@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from .models import CensusEtl
+from .models import CensusEtl, Counter
 from rest_framework.validators import UniqueTogetherValidator
 
 
-# class CensusEtlSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = CensusEtl
-#         fields = '__all__'
+class CountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Counter
+        fields = '__all__'
 
 
 class CensusEtlBulkCreateUpdateSerializer(serializers.ListSerializer):

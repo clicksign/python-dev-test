@@ -18,5 +18,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/census-etl', include('census_etl.urls'))
+    path('api/v1/census-etl/', include('census_etl.urls'))
 ]
