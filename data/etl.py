@@ -8,7 +8,7 @@ def handle_file():
 
     description_file = os.getcwd() + '/data/Description'
     file_path = os.getcwd() + '/data/Adult.data'
-    steps = 10
+    steps = 5
     text = read_description_file(description_file=description_file)
     names = generate_column_name(text=text)
     dtypes = generate_column_type(text=text)
@@ -19,7 +19,6 @@ def handle_file():
         dtypes=dtypes
     )
 
-    get_removed_data(df=data)
     checkpoint_batch(df=data, steps=steps)
     send_data(df=data)
 

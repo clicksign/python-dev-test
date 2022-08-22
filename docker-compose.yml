@@ -1,7 +1,22 @@
 version: '3'
 
 services:
-  db:
+
+  census_etl-server:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=psql://postgres:root@db-dev:5432/python-dev
+    depends_on:
+      - db-dev
+    networks:
+      - db-network
+
+  db-dev:
     image: postgres
     environment:
       POSTGRES_USER: "postgres"
@@ -24,7 +39,7 @@ services:
     volumes:
       - pgadmin-data:/var/lib/pgadmin
     depends_on:
-      - db
+      - db-dev
     networks:
       - db-network
 

@@ -2,6 +2,9 @@ import pandas as pd
 import re
 from datetime import datetime as dt
 import os
+import requests
+
+from send_counter import *
 
 
 def read_description_file(description_file):
@@ -86,7 +89,7 @@ def get_data(file_path, steps, names, dtypes):
         steps:   number of rows returned
         counter: count variable updated each iteration 
         names:   columns names of dataset
-        file_path:    location of data file
+        pathS:    location of csv
     """
     int_columns = []
     str_columns = []
@@ -96,16 +99,21 @@ def get_data(file_path, steps, names, dtypes):
         else:
             str_columns.append(key)
 
-    if os.path.exists(os.getcwd() + '/data/checkpoint/checkpoint.json') is False:
+    request = requests.request(
+        "GET", "http://localhost:8000/api/v1/census-etl/counter")
+    counter = 0
+    data = request.json()
+    if len(data) == 0:
         counter = 0
     else:
-        data = pd.read_json(os.getcwd() + '/data/checkpoint/checkpoint.json')
-        counter = data['counter'].max()
+        for x in request.json():
+            counter = x.get('counter')
     if counter == 0:
         try:
             df = pd.read_csv(file_path, nrows=steps,
                              names=names, skipinitialspace=True)
             df = df.astype('str')
+            df['counter'] = 1
             df['is_correct'] = True
             for column in int_columns:
                 df.loc[df[column].str.contains(
@@ -115,6 +123,7 @@ def get_data(file_path, steps, names, dtypes):
                     '^([\s\d]+)$', regex=True) == True, 'is_correct'] = False
             df.rename(columns={'class': 'class_category'}, inplace=True)
             return df
+
         except Exception as e:
             print(e)
     else:
@@ -122,6 +131,7 @@ def get_data(file_path, steps, names, dtypes):
             df = pd.read_csv(file_path, skiprows=steps*counter,
                              nrows=steps, names=names, skipinitialspace=True)
             df = df.astype('str')
+            df['counter'] = counter + 1
             df['is_correct'] = True
             for column in int_columns:
                 df.loc[df[column].str.contains(
@@ -131,38 +141,9 @@ def get_data(file_path, steps, names, dtypes):
                     '^([\s\d]+)$', regex=True) == True, 'is_correct'] = False
             df.rename(columns={'class': 'class_category'}, inplace=True)
             return df
+
         except Exception as e:
             print(e)
-
-
-def get_removed_data(df):
-    """
-    Creates a file with removed data with some data inconsistency,
-    found in the previous step.
-
-    params
-    ------------
-        df:   Dataframe
-    """
-    if os.path.exists(os.getcwd() + '/data/removed_data/removed_data.json') is False:
-        removed_data = df.loc[df['is_correct'] == False]
-        removed_data['extract_date'] = dt.now().strftime(
-            "%Y-%m-%d %H:%M:%S.%f")
-        removed_data = removed_data.reset_index()
-        removed_data.drop(columns='index', inplace=True)
-        return removed_data.to_json(os.getcwd() + '/data/removed_data/removed_data.json')
-    else:
-        for idx, row in df.iterrows():
-            removed_data = pd.read_json(
-                os.getcwd() + '/data/removed_data/removed_data.json')
-            removed_data.drop_duplicates(ignore_index=True, keep='first')
-            removed_data = removed_data.append(
-                df.loc[df['is_correct'] == False])
-            removed_data = removed_data.reset_index()
-            removed_data.drop(columns='index', inplace=True)
-            removed_data['extract_date'] = dt.now().strftime(
-                "%Y-%m-%d %H:%M:%S.%f")
-            return removed_data.drop_duplicates(ignore_index=True, keep='first').to_json(os.getcwd() + '/data/removed_data/removed_data.json')
 
 
 def checkpoint_batch(df, steps):
@@ -172,26 +153,29 @@ def checkpoint_batch(df, steps):
     ------------
         df:   Dataframe
     """
-    if os.path.exists(os.getcwd() + '/data/checkpoint/checkpoint.json') is False:
-        counter = 0
+    request = requests.request(
+        "GET", "http://localhost:8001/api/v1/census-etl/counter")
+    if len(request.json()) == 0:
+        data = df
+        data['counter'] = 1
     else:
-        data = pd.read_json(os.getcwd() + '/data/checkpoint/checkpoint.json')
-        data['extract_date'] = dt.now().strftime("%Y-%m-%d %H:%M:%S.%f")
-        counter = data['counter'].max()
+        data = df
+        for x in request.json():
+            freq_value = x.get('counter')
+        freq_value += 1
+        data['counter'] = freq_value
 
-    for index, row in df.iterrows():
-        # Update count
-        df['extract_date'] = dt.now().strftime("%Y-%m-%d %H:%M:%S.%f")
-        counter += 1
-        df['counter'] = counter
-        df['last_index'] = counter*steps
-        if len(df) != steps:
+    for index, row in data.iterrows():
+        send_counter(data.to_dict(orient='records'))
+        if len(data) != steps:
+            frq = data['counter'].max()
             print('Data load finished.')
-            print(f'Total of ingestion: {counter*steps}')
+            print(f'Total of ingestion: {frq*steps}')
             break
         else:
-            df.to_json(os.getcwd()+'/data/checkpoint/checkpoint.json')
+            frq = data['counter'].max()
+            send_counter(data.to_dict(orient='records'))
             print(f'Loading data...')
-            print(f'Number of ingestion: {counter}')
-            print(f'Total of ingestion: {counter*steps}')
+            print(f'Number of ingestion: {frq}')
+            print(f'Total of ingestion: {frq*steps}')
             break
