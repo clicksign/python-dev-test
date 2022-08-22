@@ -8,4 +8,3 @@ media
 .env
 *.pem
 venv
-*.json
