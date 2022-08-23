@@ -15,7 +15,7 @@ E para interagir com com esse banco de dados, criei uma estrutura no Django Rest
 Inicialmente analisei como os dados estavam vindo no Jupyter Notebook e após uma primeira ideia, tracei quais planos utilizar.
 ![alt text](https://github.com/Bereoff/python-dev-test/blob/bruno_bereoff/images/df_jupyter.png "análise prévia dos dados")
 
-A partir do arquivo de descrição, identifiquei qual o tipo de dado era esperado por cada campo da fonte de dados (Adult.data) e segui com tratamos de verificação se, por exemplo, no campo idade apenas constavam valores numerais, caso contrário iria criar alguma estratégia com aquele registro.
+A partir do arquivo de descrição, identifiquei qual o tipo de dado era esperado por cada campo da fonte de dados (Adult.data) e segui com tratamentos de verificação. Por exemplo, se no campo "age" apenas constavam valores numéricos, caso contrário iria criar alguma estratégia com aquele registro.
 ![alt text](https://github.com/Bereoff/python-dev-test/blob/bruno_bereoff/images/df_regex_jupyter.png "verificação coerência dados de acordo com o campo")
 
 E assim por diante para todos os demais campos.
