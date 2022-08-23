@@ -1,6 +1,6 @@
 # Teste Python-Dev
 
-Para esse projeto de ETL, foi pedido que fosse feita a extração de dados de um arquivo .data e que estes dados fosse enviados a uma instância de um bando de dados Postgres ou SQlite.
+Para esse projeto de ETL, foi pedido que fosse feita a extração de dados de um arquivo .data e que estes dados fosse enviados a uma instância de um banco de dados Postgres ou SQlite.
 Decidi por utilizar o **Postgres em um ambiente dockerizado**.
 
 As configurações DB:
