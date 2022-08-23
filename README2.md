@@ -13,18 +13,17 @@ E para interagir com com esse banco de dados, criei uma estrutura no Django Rest
 
 
 Inicialmente analisei como os dados estavam vindo no Jupyter Notebook e após uma primeira ideia, tracei quais planos utilizar.
-[imagem df]
+![alt text](https://github.com/Bereoff/python-dev-test/blob/bruno_bereoff/images/df_jupyter.png "análise prévia dos dados")
 
 A partir do arquivo de descrição, identifiquei qual o tipo de dado era esperado por cada campo da fonte de dados (Adult.data) e segui com tratamos de verificação se, por exemplo, no campo idade apenas constavam valores numerais, caso contrário iria criar alguma estratégia com aquele registro.
-[imagem regex]
+![alt text](https://github.com/Bereoff/python-dev-test/blob/bruno_bereoff/images/df_regex_jupyter.png "verificação coerência dados de acordo com o campo")
 
 E assim por diante para todos os demais campos.
 
 Como a carga pedida era de lotes de 1630 registros a cada 10s, tive que pensar em uma estratégia para garantir o estado (ponto de onde parou). 
-[imagem get_data]
-
+![alt text](https://github.com/Bereoff/python-dev-test/blob/bruno_bereoff/images/desev_jupyter.png "função para batch de dados")
 E para solucionar isso, além da model que iria receber os dados enviados da fonte de dados (CensusEtl), para o DRF, criei uma outra model para armazenar um contador (Counter) e poder identificar o ponto de partida para a nova carga, acessar os endpoints e enviar um post ao banco.
-[imagem payload]
+![alt text](https://github.com/Bereoff/python-dev-test/blob/bruno_bereoff/images/testes_jupyter.png "payload enviado no post dos dados no banco")
 
 Para rodar a rotina de ingestão dos dados no banco, criei um script que é um comando dentro da estrutura do Django que realiza a ingestão de acordo com o tamanho do lote e com o tempo desejado, semelhante a uma crontab.
 
