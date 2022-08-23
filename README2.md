@@ -9,7 +9,7 @@ As configurações DB:
 3. POSTGRES_PASSWORD: "root"
 4. POSTGRES_DB: "python-dev"
 
-E para interagir com com esse banco de dados, criei uma estrutura no Django Rest Framework (DRF), onde são disponibilizadas algumas rotas para realizar a criações dos registros no BD.
+E para interagir com com esse banco de dados, criei uma estrutura no Django Rest Framework (DRF), onde são disponibilizadas algumas rotas para realizar as criações dos registros no BD.
 
 
 Inicialmente analisei como os dados estavam vindo no Jupyter Notebook e após uma primeira ideia, tracei quais planos utilizar.
