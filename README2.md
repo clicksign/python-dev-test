@@ -25,7 +25,7 @@ Como a carga pedida era de lotes de 1630 registros a cada 10s, tive que pensar e
 E para solucionar isso, além da model que iria receber os dados enviados da fonte de dados (CensusEtl), para o DRF, criei uma outra model para armazenar um contador (Counter) e poder identificar o ponto de partida para a nova carga, acessar os endpoints e enviar um post ao banco.
 ![alt text](https://github.com/Bereoff/python-dev-test/blob/bruno_bereoff/images/testes_jupyter.png "payload enviado no post dos dados no banco")
 
-Para rodar a rotina de ingestão dos dados no banco, criei um script que é um comando dentro da estrutura do Django que realiza a ingestão de acordo com o tamanho do lote e com o tempo desejado, semelhante a uma crontab.
+Para rodar a rotina de ingestão dos dados no banco, criei um script que é um comando dentro da estrutura do Django que realiza a ingestão de acordo com o tamanho do lote e com o tempo desejado e que necessita ser acionada manualmente.
 
 Sobre os passos de execução para rodar o projeto:
 
