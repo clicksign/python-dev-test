@@ -1,7 +1,7 @@
 # Teste Python-Dev
 
 Para esse projeto de ETL, foi pedido que fosse feita a extração de dados de um arquivo .data e que estes dados fosse enviados a uma instância de um banco de dados Postgres ou SQlite.
-Decidi por utilizar o **Postgres em um ambiente dockerizado**.
+Decidi utilizar o **Postgres em um ambiente dockerizado**.
 
 As configurações DB:
 1. DATABASE_URL=psql://postgres:root@db-dev:5432/python-dev
