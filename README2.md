@@ -41,7 +41,7 @@ Sobre os passos de execução para rodar o projeto:
 
 E o projeto estará pronto para utilizar.
 
-O após estas etapas é necessário iniciar o servidor com:
+Após estas etapas é necessário iniciar o servidor com:
 * python manage.py runserver 8001
 
 E para realizar a ingestão do dados no banco:
