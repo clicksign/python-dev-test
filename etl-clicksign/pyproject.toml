@@ -8,6 +8,7 @@ authors = ["Arthur Antunes <arthur.antunes.aa@gmail.com>"]
 python = "^3.8"
 pandas = "^1.4.4"
 peewee = "^3.15.2"
+peewee-migrations = "^0.3.32"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

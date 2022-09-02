@@ -11,4 +11,4 @@
 3. Testes unitários
     - Model Tests usando mocks, assertando o objeto no banco e limpando o banco (tests/test_models.py)
 4. Exploração de dados 
-    - Exploração simples de dados usando jupytes (adult_data.ipynb)
+    - Exploração simples de dados usando jupyter (adult_data.ipynb)
