@@ -9,4 +9,7 @@ WORKCLASS = (
     (7, 'Never-worked')
 )
 
-
+CLASSES = (
+    (0, ">50K"),
+    (1, "<=50K")
+)

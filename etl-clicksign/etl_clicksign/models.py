@@ -3,7 +3,7 @@ sys.path.append('../')
 
 from random import choices
 import peewee
-from etl_clicksign.enumerations import WORKCLASS
+from etl_clicksign.enumerations import WORKCLASS, CLASSES
 
 # Criamos o banco de dados
 # Aqui pode ser um PostgreSql porem da mais complexidade de configuracao do setup do projeto
@@ -22,4 +22,15 @@ class Adult(BaseModel):
     age = peewee.IntegerField()
     workclass = peewee.CharField(choices=WORKCLASS)
     fnlwgt = peewee.IntegerField()
-    #TODO: pegar os fields da description e ajustar ao model
+    education = peewee.CharField()
+    education_num = peewee.IntegerField()
+    marital_status = peewee.CharField()
+    occupation = peewee.CharField()
+    relationship = peewee.CharField()
+    race = peewee.CharField()
+    sex = peewee.CharField()
+    capital_gain = peewee.IntegerField()
+    capital_loss = peewee.IntegerField()
+    hours_per_week = peewee.IntegerField()
+    native_country = peewee.CharField()
+    _class = peewee.CharField(choices=CLASSES) 
