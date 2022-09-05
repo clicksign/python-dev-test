@@ -1,6 +1,7 @@
 import airflow
 
 from models import Adult
+from algorithms import AdultExtraction
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator, SqliteOperator
 import pandas as pd
@@ -31,20 +32,8 @@ def extract_data():
     if len_adult_table >= len_adult_data:
         return "End of execution"
 
-    columns_df = ["age", "workclass", "fnlwgt", "education", "education_num", "marital_status", "occupation",\
-           "relationship", "race", "sex", "capital_gain", "capital_loss", "hours_per_week", "native_country",\
-           "_class"
-    ]
+    df  = AdultExtraction()
     
-    df = pd.read_csv('Adult.data', skipinitialspace = True, delimiter = ',', names=columns_df)
-
-    df["age"] = pd.to_numeric(df["age"], errors='coerce')
-    df["fnlwgt"] = pd.to_numeric(df["fnlwgt"], errors='coerce')
-    df["education_num"] = pd.to_numeric(df["education_num"], errors='coerce')
-    df["capital_gain"] = pd.to_numeric(df["capital_gain"], errors='coerce')
-    df["capital_loss"] = pd.to_numeric(df["capital_loss"], errors='coerce')
-    df["hours_per_week"] = pd.to_numeric(df["hours_per_week"], errors='coerce')
-
     start_row_index = len_adult_table
     end_row_index = 1+len_adult_table + LINES_PER_EXECUTION
 

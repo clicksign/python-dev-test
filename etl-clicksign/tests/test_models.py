@@ -4,6 +4,7 @@ sys.path.append('../')
 
 import unittest
 from etl_clicksign.models import Adult
+from etl_clicksign.algorithms import AdultExtraction
 from etl_clicksign.__init__ import __version__
 import pandas as pd
 
@@ -66,6 +67,11 @@ class TestSomeThings(unittest.TestCase):
 
         Adult.create_table()
         Adult.insert_many(mock_list_of_dicts).execute()
+
+    def test_algorithm(self):
+        adult_extraction_obj = AdultExtraction()
+        assert adult_extraction_obj
+
 
 if __name__ == '__main__':
     unittest.main()
