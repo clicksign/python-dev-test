@@ -1,11 +1,13 @@
 #!/usr/bin/python
+import os.path as path
+
 import pandas as pd
 from dataclasses import dataclass, field
 from typing import List
 
 @dataclass
 class AdultExtraction:
-    global_path = '/home/aantunesnds/Desktop/python-dev-test/' 
+    global_path = f'{path.abspath(path.join(__file__ ,"../../.."))}' 
     df : pd.DataFrame = field(init=False)
 
     def __post_init__(self):
@@ -19,7 +21,7 @@ class AdultExtraction:
         ]
 
         self.df = pd.read_csv(
-            f'{self.global_path}data/Adult.data', 
+            f'{self.global_path}/data/Adult.data', 
             skipinitialspace = True, 
             delimiter = ',', 
             names=columns_df
