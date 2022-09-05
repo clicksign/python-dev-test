@@ -5,20 +5,27 @@ from models import Adult
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator, SqliteOperator
 
-dag = DAG('insert_data_adult',
-          schedule_interval='*/30 * * * * *',
-          catchup=False)
+
+dag = DAG(
+    'insert_data_adult', 
+    schedule_interval='*/30 * * * * *'
+)
 
 
 def count_records_adult():
+    "Ler quantos records ja existem na tabela"
     return Adult.select().count()
 
 def count_records_data_adult():
-    return "Ler arquivo Adult.data e retornar numero de linhas"
+    "Ler arquivo Adult.data e retornar numero de linhas"
+    with open(r"data/Adult.data", 'r') as adult_data:
+        file_size = len(adult_data.readlines())
+    return file_size 
 
-def extract_csv():
+def extract_data():
     #TODO: extrair 1.630 por vez do arquivo Adult.data
     #OBS: Contar as linhas a partir do contador da tabela 
+    
     return "List com 1630 linhas"
     
 
@@ -53,9 +60,9 @@ create_table_sqlite_task = SqliteOperator(
     dag = dag
 )
 
-extract = PythonOperator(task_id='extract_csv',
+extract = PythonOperator(task_id='extract_data',
                    provide_context=True,
-                   python_callable=extract_csv,
+                   python_callable=extract_data,
                    dag=dag)
 
 transform = PythonOperator(task_id='transform_obj',

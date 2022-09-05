@@ -3,6 +3,7 @@ sys.path.append('../')
 
 from random import choices
 import peewee
+from peewee import Check
 from etl_clicksign.enumerations import WORKCLASS, CLASSES
 
 # Criamos o banco de dados
@@ -33,4 +34,14 @@ class Adult(BaseModel):
     capital_loss = peewee.IntegerField()
     hours_per_week = peewee.IntegerField()
     native_country = peewee.CharField()
-    _class = peewee.CharField(choices=CLASSES) 
+    _class = peewee.CharField(choices=CLASSES)
+
+    class Meta:
+        constraints = [
+            Check('age>-1'),
+            Check('fnlwgt>-1'),
+            Check('education_num>-1'),
+            Check('capital_gain>-1'),
+            Check('capital_loss>-1'),
+            Check('hours_per_week>-1')
+        ]
