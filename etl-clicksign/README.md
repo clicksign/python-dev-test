@@ -13,6 +13,6 @@
         * **transform_load** responsáveil por carregar e inserir os dados no banco (utilizando o ORM) 
 3. Testes unitários
     - Model Tests usando mocks, assertando o objeto no banco, limpando o banco e manipulando os dados do Adult.data com pandas(tests/test_models.py)
-    - Um arquivo para testar algumas funcionalidades mais tri
+    - Um arquivo para testar durante o desenvolvimento algumas funcionalidades mais triviais do programa
 4. Exploração de dados 
     - Exploração simples de dados usando jupyter (adult_data.ipynb)
