@@ -1,7 +1,7 @@
 import airflow
 
-from models import Adult
-from algorithms import AdultExtraction
+from moddules.models import Adult
+from moddules.algorithms import AdultExtraction
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator, SqliteOperator
 import pandas as pd

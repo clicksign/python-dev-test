@@ -1,7 +1,6 @@
 import sys
 sys.path.append('../')
 
-from random import choices
 import peewee
 from peewee import Check
 from etl_clicksign.enumerations import WORKCLASS, CLASSES
