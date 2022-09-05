@@ -1,16 +1,16 @@
 import airflow
 
-
 from models import Adult
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator, SqliteOperator
+import pandas as pd
 
+LINES_PER_EXECUTION = 1630
 
 dag = DAG(
     'insert_data_adult', 
     schedule_interval='*/30 * * * * *'
 )
-
 
 def count_records_adult():
     "Ler quantos records ja existem na tabela"
@@ -24,16 +24,38 @@ def count_records_data_adult():
 
 def extract_data():
     #TODO: extrair 1.630 por vez do arquivo Adult.data
-    #OBS: Contar as linhas a partir do contador da tabela 
-    
-    return "List com 1630 linhas"
-    
+    #OBS: Contar as linhas a partir do contador da tabela
+    len_adult_table = count_records_adult() 
+    len_adult_data = count_records_data_adult()
 
-def transform_obj():
+    if len_adult_table >= len_adult_data:
+        return "End of execution"
+
+    columns_df = ["age", "workclass", "fnlwgt", "education", "education_num", "marital_status", "occupation",\
+           "relationship", "race", "sex", "capital_gain", "capital_loss", "hours_per_week", "native_country",\
+           "_class"
+    ]
+    
+    df = pd.read_csv('Adult.data', skipinitialspace = True, delimiter = ',', names=columns_df)
+
+    df["age"] = pd.to_numeric(df["age"], errors='coerce')
+    df["fnlwgt"] = pd.to_numeric(df["fnlwgt"], errors='coerce')
+    df["education_num"] = pd.to_numeric(df["education_num"], errors='coerce')
+    df["capital_gain"] = pd.to_numeric(df["capital_gain"], errors='coerce')
+    df["capital_loss"] = pd.to_numeric(df["capital_loss"], errors='coerce')
+    df["hours_per_week"] = pd.to_numeric(df["hours_per_week"], errors='coerce')
+
+    start_row_index = len_adult_table
+    end_row_index = 1+len_adult_table + LINES_PER_EXECUTION
+
+    rows_to_insert = list(df[start_row_index:end_row_index].T.to_dict().values())
+    
+    return rows_to_insert
+    
+def transform_obj_load_sqlite(ti):
+    rows_to_insert = ti.xcom_pull(task_ids='extract_data')
+    Adult.insert_many(rows_to_insert).execute()
     #TODO: transform cada linha em Adult Obj
-    return "List com 1630 objetos Adult"
-
-def load_sqlite():
     #TODO: Carregar 1630 objetos Adult no banco
     return "Carregar 1630 objetos Adult no banco"
 
@@ -65,16 +87,10 @@ extract = PythonOperator(task_id='extract_data',
                    python_callable=extract_data,
                    dag=dag)
 
-transform = PythonOperator(task_id='transform_obj',
+transform_load = PythonOperator(task_id='transform_obj_load_sqlite',
                    provide_context=True,
-                   python_callable=transform_obj,
+                   python_callable=transform_obj_load_sqlite,
                    dag=dag)
 
-load = PythonOperator(task_id='load_sqlite',
-                   provide_context=True,
-                   python_callable=load_sqlite,
-                   dag=dag)
-
-
-create_table_sqlite_task >> extract >> transform >> load
+create_table_sqlite_task >> extract >> transform_load
 
