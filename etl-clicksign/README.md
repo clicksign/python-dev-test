@@ -34,19 +34,13 @@
 - Depois de algumas tentativas consegui fazer as 2 primeiras tasks da Dag rodarem corretamente. Depois comecei ter mais problemas com o ORM. Nesse ponto acredito que já consegui entender o básico do Airflow e acabei descobrindo mais uma utilidade pra um Grafo Direcionado! =D
 
 
-![dag1.png](imgs/dag1.png "Employee Data title")
+![dag2.png](imgs/dag2.png)
+![dag3.png](imgs/dag3.png)
+![dag5.png](imgs/dag5.png)
+![dag6.png](imgs/dag6.png)
+![dag7.png](imgs/dag7.png)
+![dag8.png](imgs/dag8.png)
+![dag9.png](imgs/dag9.png)
+![dag10.png](imgs/dag10.png)
 
-![dag2.png](imgs/dag2.png "Employee Data title")
-
-![dag3.png](imgs/dag3.png "Employee Data title")
-
-![dag5.png](imgs/dag5.png "Employee Data title")
-
-![dag6.png](imgs/dag6.png "Employee Data title")
-
-![dag7.png](imgs/dag7.png "Employee Data title")
-
-![dag8.png](imgs/dag8.png "Employee Data title")
-
-![dag9.png](imgs/dag9.png "Employee Data title")
 
