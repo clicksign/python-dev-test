@@ -56,3 +56,5 @@ Como uma ajuda extra, use a seguinte lista de verificação para se certificar d
 - [ ] Salve o código resultante, scripts, documentação, etc. em pastas compatíveis com o mesmo nome do conjunto de dados de entrada (Apenas para nos ajudar! 👍)
 - [ ] Prepare os commits em branchs separados usando o padrão de nomeação: nome + sobrenome.
 - [ ] Envie o P.R.! (Dedos cruzados!:sunglasses:)
+
+
