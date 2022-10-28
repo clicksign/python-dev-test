@@ -1,0 +1,1 @@
+* * * * * for i in {1..6}; do cd /home/josemartins/htdocs/clicksign_teste/python-dev-test/ && venv/bin/python application.py process main && sleep 10; done
