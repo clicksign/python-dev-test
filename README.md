@@ -1,58 +1,140 @@
-# Desafio - Dev Python
+# python-dev-test
 
-Este repositório possui um teste que visa avaliar sua curiosidade, seus conhecimentos em Python, análise e limpeza de dados, Storytelling e conceitos relacionados a processos ETL/ELT. O teste possui seu próprio conjunto de arquivos, parâmetros, instruções e estratégias para ser resolvido. Portanto, estude cada detalhe com sabedoria.
+Como solução proposta ao teste foi criada uma solução, utilizando o SO Windows 10, com as seguintes caracteristiscas:<br>
+    &nbsp;\- Processo de ETL com o Airflow<br>
+    &nbsp;\- SGBD: Postgres:13
 
-# US Census Bureau - Criação de um processo ETL/ELT
+---
+## Características do Processo
 
-Sua tarefa é criar um processo ETL/ELT com agendamento que transporte dados úteis, presentes nos datasets fornecidos, para um banco de dados relacional. Os critérios para a execução deste desafio são:
+O processo foi configurado para rodar a cada hora (cron: 0 */1 * * *), com um intervalo de 1630 linhas por insert e um intervalo de 10 segundos para conjuntos de dados inseridos.
 
-1. Suas **únicas e excluisivas** fonte de dados devem ser os datasets fornecidos neste repositório;
-2. Você deve processar **todos** os arquivos de dados fornecidos;
-3. Seu script deve ser agendado para rodar a cada **10 segundos** processando **1.630 registros**;
-4. Aplique todas as transformações e limpeza de dados que julgar necessária (*Tenha em mente que precisamos acessar dados úteis que possibilitem a extração de insights!*);
-5. Carregue os dados processados em um banco de dados **Postgres ou SQLite** e;
-6. Ao criar sua tabela no banco de dados, respeite a **tipagem dos dados e o nome das colunas** fornecidas no arquivo de descrição.
+<b>Dados do Banco de dados</b><br>
+    &nbsp;HOST=host.docker.internal<br>
+    &nbsp;DATABASE=adult<br>
+    &nbsp;USER=root<br>
+    &nbsp;PASSWORD=root
 
-# Dicas
+<b>Criação de um arflow com as seguintes pastas: </b><br>
+ &nbsp;\- \dags\
+ 
+ &nbsp;\- \docker-files\
+ &nbsp;\- \docker-files\docker-airflow\
+ &nbsp;\- \docker-files\docker-db-postgres\
 
-(:gem:) Facilite sua vida! Use alguma tecnologia de agendamento como o Apache *Airflow* ou até mesmo o *Crontab* do Linux.
+ &nbsp;\- \inputs\
+ &nbsp;\- \inputs\data
+ &nbsp;\- \inputs\queries 
 
-# Instruções
+ &nbsp;\- \logs\
+ &nbsp;\- \plugins\ 
+ &nbsp;\- \plugins\dataprocessing\
+ &nbsp;\- \plugins\operators\
+ &nbsp;\- \plugins\utils\
 
-Por favor, desenvolva um script ou programa de computador utilizando a linguagem de programação **Python** para resolver o problema proposto. Estamos cientes da dificuldade associada a tarefa, mas toda criatividade, estratégia de raciocínio, detalhes na documentação do código, estrutura e precisão do código serão usados ​​para avaliar o desempenho do candidato. Portanto, certifique-se de que o código apresentado reflita o seu conhecimento tanto quanto possível!
+<b> Para configurar o processo do airflow, tem-se os arquivos: </b><br>
+ &nbsp;\- \docker-files\docker-airflow\docker-compose<br>
+ &nbsp;\- \docker-files\docker-airflow\Dockerfile<br>
+ &nbsp;\- \docker-files\docker-airflow\requeriments.txt<br>
+ &nbsp;\- \docker-files\docker-airflow\.env
 
-Esperamos que uma solução possa ser alcançada dentro de um período de tempo razoável, considerando alguns dias, portanto, fique à vontade para usar o tempo da melhor forma possível. Entendemos que você pode ter uma agenda apertada, portanto, não hesite em nos contatar para qualquer solicitação adicional👍.
+<b> Para configurar o processo do postgres, tem-se os arquivos: </b><br>
+ &nbsp;\- \docker-files\docker-db-postgres\docker-compose<br>
+ &nbsp;\- \docker-files\docker-db-postgres\.env<br>
 
-## Datasets
+<b> Para criação da tabela, foi criado o script adult.sql: </b><br>
+ &nbsp;\- \inputs\queries\create\adult.aql
+ Script:
+ ```
+    create table if not exists public.adult (
+        id_adult            serial primary key,
+        age                 bigint,
+        workclass           varchar(50),
+        fnlwgt              bigint,
+        education           varchar(50),
+        "education-num"     bigint,
+        "marital-status"    varchar(50),
+        occupation          varchar(100),
+        relationship        varchar(50),
+        race                varchar(50),
+        sex                 varchar(6),
+        "capital-gain"      real,
+        "capital-loss"      real,
+        "hours-per-week"    bigint,
+        "native-country"    varchar(50),
+        class               varchar(5),
+        dat_import          timestamp default now()
+    )
+ ```
 
-O que você precisará para completar este desafio está armazenado na pasta **data** deste repositório. Este diretório contém os seguintes arquivos: 
 
-1. (:mag_right:) **Adult.data** (*Arquivo de dados*)
-2. (:mag_right:) **Adult.test** (*Arquivo de dados*)
-3. (:clipboard:) **Description** (*Arquivo de informações*)
+<b>Para processar, temos o seguinte arquivo .py:</b><br>
+ &nbsp;\- \plugins\dataprocessing\main.pyt
+ Nessa pasta tem uma função main com os tratamentos utilizados para processar o arquivo
+ Tratamentos utilizados:<br>
+   &nbsp;&nbsp;\- Remoção de duplicatas<br>
+   &nbsp;&nbsp;\- Tratamento de registros inconstentes<br>
+   &nbsp;&nbsp;\- Tratamento de números nulos
 
+<b>Para auxiliar no processo de ingestão, foram criadas os seguintes objetos:</b><br>
+   &nbsp;\- DataToPostgresOperator: responsável por configurar os métodos de ingestão e com os seguintes parâmentros:<br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;task_id: nome da task 
+        &nbsp;&nbsp;&nbsp;&nbsp;method: método a ser executado, entre eles:<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\- execute<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\- truncate<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\- insert<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\- insert_df_pandas <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;conn_id: id da conexão armazenada dentro das connections do airflow<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;path_file: caminho do arquivo a ser executado<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;cols_type: nome e tipo das colunas <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;table_name: nome da tabela <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;range_data: intervalo de linhas a serem inseridas<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;step_time: intervalo de tempo para cada ingestão<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;delimiter: delimitador, caso a ingestão seja por um arquivo csv<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;encoding: encoding do arquivo
 
-## Enviando sua solução
+<b>Para executar os parâmentros do processo:</b><br>
+ &nbsp;\- Dag com o caminnho: \dags\dag_file_to_postgres.py
+ ```
+    # Declated DAG with parameters
+    dag = DAG(
+        dag_id="data_to_postgres",
+        schedule_interval = "0 */1 * * *",
+        dagrun_timeout=datetime.timedelta(minutes=60),
+        start_date = days_ago(0)
+    ) 
 
-Faça um fork deste projeto, e crie um branch com sua conta no Github, utilizando seu nome e sobrenome nele. Por exemplo, um branch com o nome *"Franklin Ferreira"* definirá que o candidato com o mesmo nome está fazendo o upload do código com a solução para o teste. Por favor, coloque os scripts e o código em pastas separadas (com o mesmo nome das pastas de arquivo fornecidas) para facilitar nossa análise.
+    # Creating task to create table
+    task_create_table = DataToPostgresOperator(
+                        task_id = "task_create_table",
+                        conn_id = "adult_db_id",
+                        path_file = path_query,
+                        method = "execute",
+                        execution_timeout=datetime.timedelta(hours=2),
+                        dag = dag
+                    )
+    # Creating a task to truncate table
+    task_truncate_table = DataToPostgresOperator(
+                        task_id = "task_truncate_table",
+                        conn_id = "adult_db_id",
+                        method = "truncate",
+                        table_name = "adult",
+                        execution_timeout=datetime.timedelta(hours=2),
+                        dag = dag
+                    )
+    # Create task to oinsert table
+    task_insert_data = DataToPostgresOperator(
+                    task_id = "task_insert_data",
+                    method = "insert_df_pandas",
+                    table_name = "adult",
+                    path_file = path_file,
+                    cols_type = cols_type,
+                    range_data = 1630,
+                    conn_id = conn_id,
+                    execution_timeout=datetime.timedelta(hours=2),
+                    step_time = 0,
+                    dag = dag   
+                    )
 
-Se desejar, crie um arquivo PDF com imagens nos indicando todo o processo que executou para gerar sua solução. Prezamos muito por bons *Storytellings*.
-
-Além disso, esperamos que o candidato possa explicar o procedimento e a estratégia adotadas usando muitos, muitos e muitos comentários ou até mesmo um arquivo README separado. Esta parte da descrição é muito importante para facilitar nosso entendimento de sua solução! Lembre-se que o primeiro contato técnico com o candidato é por meio deste teste de codificação. Apesar de reforçarmos a importância da documentação e explicação do código, somos muito flexíveis para permitir a liberdade de escolher qual será o tipo de comunicação (por exemplo, arquivos README, comentários de código, etc).
-
-Outra boa dica a seguir é o conceito geral de engenharia de software que também é avaliado neste teste. Espera-se que o candidato tenha um conhecimento sólido de tópicos como **Test-Driven Development (TDD)**, e paradigmas de código limpo em geral. Em resumo, é uma boa ideia prestar atenção tanto ao código quanto às habilidades dos engenheiros de software.
-
-Depois de todas as análises e codificação serem feitas, crie uma solicitação de pull (PR) neste repositório.
-
-# Resumo
-
-Como uma ajuda extra, use a seguinte lista de verificação para se certificar de que todas as etapas do desafio foram concluídas:
-
-- [ ] Baixe todos os arquivos do teste neste repositório.
-- [ ] Crie uma solução adequada usando scripts, bibliotecas de código aberto, soluções de código próprio, etc. Considere que seguiremos suas instruções para executar seu código e ver o resultado.
-- [ ] Certifique-se de que a saída para o teste esteja de acordo com a saída necessária explicada aqui no arquivo *README.md*.
-- [ ] Se você está entusiasmado, pode nos enviar uma análise exploratória dos dados! :ok_hand:.
-- [ ] Faça comentários ou arquivos de documentação auxiliar (por exemplo, arquivos README) para auxiliar na interpretação de suas soluções. Lembre-se: adoramos ler seus comentários e explicações!
-- [ ] Salve o código resultante, scripts, documentação, etc. em pastas compatíveis com o mesmo nome do conjunto de dados de entrada (Apenas para nos ajudar! 👍)
-- [ ] Prepare os commits em branchs separados usando o padrão de nomeação: nome + sobrenome.
-- [ ] Envie o P.R.! (Dedos cruzados!:sunglasses:)
+    task_create_table >> task_truncate_table >> task_insert_data
+ ```

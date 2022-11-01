@@ -1,0 +1,8 @@
+test.py
+**venv
+*.bat
+db
+__pycache__
+**/*.pyc
+*.lnk
+logs/

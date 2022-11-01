@@ -1,0 +1,26 @@
+#docker run -d -p 5432:5432 --add-host pgmaster:10.0.0.3 postgres:13
+#host.docker.internal
+version: "3"
+services:
+  postgres_db:
+    image: postgres:13
+    container_name: "pg_container"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-root}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    #command: postgres -p 5433
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+    extra_hosts:
+      - "pgmaster:10.0.0.3"
+    restart: always
+
+volumes:
+  db_data:
