@@ -6,7 +6,7 @@ Este repositório possui um teste que visa avaliar sua curiosidade, seus conheci
 
 Sua tarefa é criar um processo ETL/ELT com agendamento que transporte dados úteis, presentes nos datasets fornecidos, para um banco de dados relacional. Os critérios para a execução deste desafio são:
 
-1. Suas **únicas e excluisivas** fonte de dados devem ser os datasets fornecidos neste repositório;
+1. Suas **únicas e exclusivas** fonte de dados devem ser os datasets fornecidos neste repositório;
 2. Você deve processar **todos** os arquivos de dados fornecidos;
 3. Seu script deve ser agendado para rodar a cada **10 segundos** processando **1.630 registros**;
 4. Aplique todas as transformações e limpeza de dados que julgar necessária (*Tenha em mente que precisamos acessar dados úteis que possibilitem a extração de insights!*);
@@ -48,7 +48,7 @@ Depois de todas as análises e codificação serem feitas, crie uma solicitaçã
 
 Como uma ajuda extra, use a seguinte lista de verificação para se certificar de que todas as etapas do desafio foram concluídas:
 
-- [ ] Baixe todos os arquivos do teste neste repositório.
+- [X] Baixe todos os arquivos do teste neste repositório.
 - [ ] Crie uma solução adequada usando scripts, bibliotecas de código aberto, soluções de código próprio, etc. Considere que seguiremos suas instruções para executar seu código e ver o resultado.
 - [ ] Certifique-se de que a saída para o teste esteja de acordo com a saída necessária explicada aqui no arquivo *README.md*.
 - [ ] Se você está entusiasmado, pode nos enviar uma análise exploratória dos dados! :ok_hand:.
